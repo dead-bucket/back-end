@@ -1,0 +1,22 @@
+{
+  "name": "dead-bucket-back-end",
+  "version": "1.0.0",
+  "description": "server and mongo models for backend",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dead-bucket/back-end.git"
+  },
+  "author": "RND & DM",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dead-bucket/back-end/issues"
+  },
+  "homepage": "https://github.com/dead-bucket/back-end#readme"
+}
