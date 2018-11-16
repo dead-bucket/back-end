@@ -7,6 +7,7 @@ const Entry = mongoose.Schema({
   recipient: [String],
   mood: {type: String, required: false},
   description: {type: String, required: false },
+  delivered: { type: Boolean, required: true }, 
  }, {timestamps: true});
 
 F

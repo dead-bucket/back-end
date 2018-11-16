@@ -11,6 +11,8 @@ const userModel = mongoose.Schema({
   tokenSeed : { type: String, unique: true},
   phoneNumber : { type: String, required: true},
   lastLogin: { type: Date, required: true},
+  friends: [],
+  notifications:[],
 }, {timestamps: true});
 
 // This hashes the password and stores it in hashed form
