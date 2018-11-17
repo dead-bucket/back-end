@@ -9,8 +9,8 @@ const userModel = mongoose.Schema({
   email : { type: String, required: true, unique: true},
   password : { type: String, required: true},
   tokenSeed : { type: String, unique: true},
-  phoneNumber : { type: String, required: true},
-  lastLogin: { type: Date, required: true},
+  phoneNumber : { type: String, required: false},
+  lastLogin: { type: Date, required: false},
   friends: [],
   notifications:[],
 }, {timestamps: true});
