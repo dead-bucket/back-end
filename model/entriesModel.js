@@ -7,9 +7,9 @@ const Entry = mongoose.Schema({
   recipient: [String],
   mood: {type: String, required: false},
   description: {type: String, required: false },
-  delivered: { type: Boolean, required: true }, 
- }, {timestamps: true});
+  delivered: { type: Boolean, default: false }, 
+}, {timestamps: true});
 
-F
-};
+
+
 module.exports = mongoose.model('entries', Entry);
