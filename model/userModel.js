@@ -10,7 +10,7 @@ const userModel = mongoose.Schema({
   password : { type: String, required: true},
   tokenSeed : { type: String, unique: true},
   phoneNumber : { type: String, required: false},
-  lastLogin: { type: Date, required: false},
+  lastLogin: { type: Date, default: Date.now()},
   friends: [],
   notifications:[],
 }, {timestamps: true});
