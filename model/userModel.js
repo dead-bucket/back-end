@@ -49,5 +49,11 @@ userModel.methods.generateToken = function() {
     })
     .catch(err => err);
 };
+userModel.methods.updateLogin = function () {
+  this.lastLogin = Date.now();
+  return this.save()
+    .then(() => Promise.resolve(this))
+    .catch(console.error);
+};
 
 module.exports = mongoose.model('userModel', userModel);

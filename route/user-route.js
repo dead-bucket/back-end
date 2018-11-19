@@ -4,6 +4,7 @@ const User = require('../model/userModel');
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const basicAuth = require('../lib/basic-auth-middleware');
+const bearerAuth = require('../lib/bearer-auth-middleware');
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
@@ -28,8 +29,15 @@ module.exports = function(router) {
           ? user.comparePasswordHash(req.userModelHeader.password)
           : Promise.reject(new Error('Authorization Failed. Username required.'))
       )
+      .then(user => user.updateLogin())
       .then(user => user.generateToken())
       .then(token => res.status(200).json(token))
+      .catch(err => errorHandler(err, res));
+  });
+  router.get('/user', bearerAuth, (req, res) => {
+    
+    User.findOne(req.user._id)
+      .then(user => res.status(200).json(user))
       .catch(err => errorHandler(err, res));
   });
 };
