@@ -19,10 +19,10 @@ module.exports = router => {
     })
   // this is working
     .get(bearerAuth, (req, res) => {
-      console.log('in get route entries', req.params.id);
-      if(req.params.id) {
+      console.log('in get route entries', req.query.id);
+      if(req.query.id) {
         console.log('in find one GET route');
-        return Entry.findById(req.params.id)
+        return Entry.findById(req.query.id)
           .then(entry => res.status(200).json(entry))
           .catch(err => errorHandler(err, res));
       }
@@ -58,5 +58,7 @@ module.exports = router => {
         .then(() => res.sendStatus(204))
         .catch(err => errorHandler(err, res));
     });
+  
+
 };
 
