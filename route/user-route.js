@@ -33,10 +33,31 @@ module.exports = function(router) {
       .then(token => res.status(200).json(token))
       .catch(err => errorHandler(err, res));
   });
-  router.get('/user', bearerAuth, (req, res) => {
-    
+  
+  router.put('/changepassword', bearerAuth, bodyParser, (req, res) => {
+      
     User.findOne(req.user._id)
-      .then(user => res.status(200).json(user))
+      .then(user => {
+        if(user) {
+          return user.comparePasswordHash(req.body.oldpassword);
+        } else {
+          Promise.reject(new Error('Authorization Failed. No user found'));
+        }
+      })
+      .then(userRes => {
+        let pw = req.body.newpassword;
+        delete req.body.newpassword;
+        delete req.body.oldpassword;
+        userRes.generatePasswordHash(pw)
+          .then( updatedUser => {
+            updatedUser.save();
+          })
+          .then(() => res.sendStatus(204))
+          .catch(err => errorHandler(err, res));
+      })
       .catch(err => errorHandler(err, res));
+        
   });
+    
+  
 };
