@@ -27,7 +27,7 @@ module.exports = router => {
           .catch(err => errorHandler(err, res));
       }
 
-      return Entry.find()
+      return Entry.find({userId : req.user._id})
         .then(entry => {
           console.log('in get all entries');
           let entryIds = entry.map(ent => ent._id);
