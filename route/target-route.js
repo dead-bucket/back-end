@@ -50,9 +50,13 @@ module.exports = router => {
   //   })
   // //  this is working
     .delete(bearerAuth, (req, res) => {
+      if(!req.query.id) {
+        console.log('in target delete but no target id',req.query.id);
+        return errorHandler(new Error('validation failed, no target id specified'), res);
+      }
       return Target.findById(req.query.id)
         .then(targetEntry => {
-          console.log('deleted target entry', targetEntry)
+          console.log('deleted target entry', targetEntry);
           if(targetEntry)
             return targetEntry.remove();
           Promise.reject(new Error('objectid failed'));

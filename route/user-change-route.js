@@ -1,9 +1,7 @@
 'use strict';
 
 const User = require('../model/userModel');
-const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
-const basicAuth = require('../lib/basic-auth-middleware');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 
 module.exports = function(router) {
