@@ -36,8 +36,11 @@ module.exports = router => {
     })
   //this is working 
     .put(bearerAuth, bodyParser, (req, res) => {
+      if(!req.query.id) {
+        return errorHandler(new Error('validation failed, no entry id specified'), res);
+      }
 
-      Entry.findById(req.params.id)
+      Entry.findById(req.query.id)
         .then(entry => {
           if(!entry) return Promise.reject(new Error('Authorization error'));
           return entry.set(req.body).save();        
@@ -47,10 +50,13 @@ module.exports = router => {
     })
   //  this is working
     .delete(bearerAuth, (req, res) => {
-      return Entry.findById(req.params.id)
+      if(!req.query.id) {
+        return errorHandler(new Error('validation failed, no entry id specified'), res);
+      }
+
+      return Entry.findById(req.query.id)
         .then(entry => {
-          if(entry.userId.toString() === req.user._id.toString())
-            return entry.remove();
+          if(entry) return entry.remove();
           Promise.reject(new Error('objectid failed'));
         })
         .then(() => res.sendStatus(204))

@@ -38,20 +38,21 @@ module.exports = router => {
         .catch(err => errorHandler(err, res));
     })
   //this is working 
-  //   .put(bearerAuth, bodyParser, (req, res) => {
-
-  //     Entry.findById(req.params.id)
-  //       .then(entry => {
-  //         if(!entry) return Promise.reject(new Error('Authorization error'));
-  //         return entry.set(req.body).save();        
-  //       })
-  //       .then(() => res.sendStatus(204))
-  //       .catch(err => errorHandler(err, res));
-  //   })
+    .put(bearerAuth, bodyParser, (req, res) => {
+      if(!req.query.id) {
+        return errorHandler(new Error('validation failed, no target id specified'), res);
+      }
+      Target.findById(req.query.id)
+        .then(entry => {
+          if(!entry) return Promise.reject(new Error('Authorization error'));
+          return entry.set(req.body).save();        
+        })
+        .then(() => res.sendStatus(204))
+        .catch(err => errorHandler(err, res));
+    })
   // //  this is working
     .delete(bearerAuth, (req, res) => {
       if(!req.query.id) {
-        console.log('in target delete but no target id',req.query.id);
         return errorHandler(new Error('validation failed, no target id specified'), res);
       }
       return Target.findById(req.query.id)
