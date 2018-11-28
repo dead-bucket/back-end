@@ -3,11 +3,11 @@
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 
-const Entry = require('../model/entriesModel');
+
 const Target = require('../model/targetModel');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 
-const ERROR_MESSAGE = 'Authorization Failed';
+
 
 module.exports = router => {
   router.route('/target/:id?')
@@ -20,7 +20,7 @@ module.exports = router => {
     })
   // this is working
     .get(bearerAuth, (req, res) => {
-      console.log('in get route entries req.params.id', req.query.id);
+      console.log('in get route entries req.query.id', req.query.id);
       if(req.query.id) {
         console.log('in find one GET route', req.query.id);
         return Target.findById(req.query.id)
