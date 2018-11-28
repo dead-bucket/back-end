@@ -9,8 +9,10 @@ const userModel = mongoose.Schema({
   email : { type: String, required: true, unique: true},
   password : { type: String, required: true},
   tokenSeed : { type: String, unique: true},
-  phoneNumber : { type: String, required: true},
-  lastLogin: { type: Date, required: true},
+  phoneNumber : { type: String, required: false},
+  lastLogin: { type: Date, default: Date.now()},
+  friends: [],
+  notifications:[],
 }, {timestamps: true});
 
 // This hashes the password and stores it in hashed form
@@ -46,6 +48,12 @@ userModel.methods.generateToken = function() {
       return jwt.sign({token: tokenSeed}, process.env.APP_SECRET);
     })
     .catch(err => err);
+};
+userModel.methods.updateLogin = function () {
+  this.lastLogin = Date.now();
+  return this.save()
+    .then(() => Promise.resolve(this))
+    .catch(console.error);
 };
 
 module.exports = mongoose.model('userModel', userModel);
