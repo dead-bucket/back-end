@@ -2,8 +2,9 @@
 
 For Local Copy 
 
-`npm i --s`
-`npm run dev`
+`npm i --s npm run dev`
+create .env file 
+copy content of file from slack channel.
 
 ###Routes
 
