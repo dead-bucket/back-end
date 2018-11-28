@@ -7,7 +7,6 @@ require('jest');
 
 let port = process.env.PORT;
 let api = `:${port}/api/v1`;
-const testUser = {'username': 'hick', 'password':'dick'};
 let token;
 
 describe('Sign up route', () => {
@@ -17,7 +16,7 @@ describe('Sign up route', () => {
       .auth('mandy', 'south')
       .then(res => {
         token = res.body;
-        console.log('token', token);
+        // console.log('token', token);
       })
       .catch(err => console.error(err));
   });

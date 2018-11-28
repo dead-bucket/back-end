@@ -1,11 +1,11 @@
-const faker = require('faker');
+
 const superagent = require('superagent');
 const server = require('../../lib/server');
 require('jest');
 
 let port = process.env.PORT;
 let api = `:${port}/api/v1`;
-const testUser = {'username': 'hick', 'password':'dick'};
+
 let token, testTarget;
 
 describe('Sign up route', () => {
@@ -15,14 +15,14 @@ describe('Sign up route', () => {
       .auth('mandy', 'south')
       .then(res => {
         token = res.body;
-        console.log('token in entries route signin', token);
+        // console.log('token in entries route signin', token);
       })
       .then(() => {
         return superagent.get(`${api}/target/`)
           .set('Authorization', `Bearer ${token}`)
           .then(res => {
             testTarget = res.body[0]._id;
-            console.log('targets', testTarget);
+            // console.log('targets', testTarget);
           })
           .catch(err => console.error(err));
       })
@@ -41,7 +41,7 @@ describe('Sign up route', () => {
         })
         .then(res => {
           this.res = res;
-          console.log('res from entry post', res.body);
+          // console.log('res from entry post', res.body);
         })
         .catch(err => console.error(err));
     });
@@ -51,13 +51,7 @@ describe('Sign up route', () => {
       expect(this.res.body).toBeInstanceOf(Object);
 
     });
-    
-    // it('should run', () => {
-    //   expect(true).toBe(true);
-    // });
-  });
-  
 
-  
+  });
   
 });

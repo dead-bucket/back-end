@@ -12,10 +12,10 @@ module.exports = function(router) {
         .catch(err => errorHandler(err, res));
     })
     .delete(bearerAuth, (req, res) => {
-      console.log('in delete', req.user._id);
+      // console.log('in delete', req.user._id);
       User.findById(req.user._id)
         .then(User => {
-          console.log('in user remove', User);
+          // console.log('in user remove', User);
           if(User) {
             return User.remove();
           }

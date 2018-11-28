@@ -9,7 +9,7 @@ const bearerAuth = require('../lib/bearer-auth-middleware');
 module.exports = router => {
   router.route('/entry/:id?')
     .post(bearerAuth, bodyParser, (req, res) => {
-      console.log('in entries route post!!');
+      // console.log('in entries route post!!');
       req.body.userId = req.user._id;
       return new Entry(req.body).save()
         .then(createdEntry => res.status(201).json(createdEntry))
@@ -17,9 +17,9 @@ module.exports = router => {
     })
   // this is working
     .get(bearerAuth, (req, res) => {
-      console.log('in get route entries', req.query.id);
+      // console.log('in get route entries', req.query.id);
       if(req.query.id) {
-        console.log('in find one GET route');
+        // console.log('in find one GET route');
         return Entry.findById(req.query.id)
           .then(entry => res.status(200).json(entry))
           .catch(err => errorHandler(err, res));
@@ -27,7 +27,7 @@ module.exports = router => {
 
       return Entry.find({userId : req.user._id})
         .then(entry => {
-          console.log('in get all entries');
+          // console.log('in get all entries');
           let entryIds = entry.map(ent => ent._id);
 
           res.status(200).json(entryIds);
