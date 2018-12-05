@@ -21,13 +21,18 @@ module.exports = router => {
       if(req.query.id) {
         // console.log('in find one GET route');
         return Entry.findById(req.query.id)
-          .then(entry => res.status(200).json(entry))
+          .then(entry => {
+            console.log('in get one entry', entry);
+            res.status(200).json(entry);
+
+          })
           .catch(err => errorHandler(err, res));
       }
 
       return Entry.find({userId : req.user._id})
         .then(entry => {
           // console.log('in get all entries');
+          // this makes no sense fix
           let entryIds = entry.map(ent => ent._id);
 
           res.status(200).json(entryIds);
