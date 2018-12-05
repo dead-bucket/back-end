@@ -1,6 +1,6 @@
 'use strict';
 
-const faker = require('faker');
+
 const mocks = require('../lib/mocks');
 const superagent = require('superagent');
 const server = require('../../lib/server');
@@ -16,7 +16,7 @@ describe('Sign up route', () => {
     return mocks.target.createOne()
       .then(mock => {
         this.mockdata = mock;
-        console.log('mock date target token', this.mockdata.user.token);
+        console.log('mock date target token', this.mockdata.target._id);
       });
   });
   afterAll(() => mocks.target.removeAll());
@@ -24,26 +24,41 @@ describe('Sign up route', () => {
   afterAll(() => server.stop());
 
 
-  describe('valid new target', () => {
+  describe('Get a created target', () => {
     beforeAll(() => {
-      return superagent.post(`${api}/target/`)
+      return superagent
+        .get(`${api}/target/`)
+        .query(`id=${this.mockdata.target._id}`)
         .set('Authorization', `Bearer ${this.mockdata.user.token}`)
-        .send({
-          name: 'tessa',
-        })
         .then(res => {
           this.response = res;
         })
         .catch(err => console.error(err));
     });
-    it('should return a 201 status code', () => {
-      expect(this.response.status).toBe(201);
+    it('should return a 200 status code', () => {
+      expect(this.response.status).toBe(200);
     });
     it('should have a object in the response body', () => {
       expect(this.response.body).toBeInstanceOf(Object);
     });
   });
-
+  describe('Get all created target', () => {
+    beforeAll(() => {
+      return superagent
+        .get(`${api}/target/`)
+        .set('Authorization', `Bearer ${this.mockdata.user.token}`)
+        .then(res => {
+          this.response = res;
+        })
+        .catch(err => console.error(err));
+    });
+    it('should return a 200 status code', () => {
+      expect(this.response.status).toBe(200);
+    });
+    it('should have a object in the response body', () => {
+      expect(this.response.body).toBeInstanceOf(Array);
+    });
+  });
   
   
 });

@@ -52,6 +52,8 @@ module.exports = router => {
     })
   // //  this is working
     .delete(bearerAuth, (req, res) => {
+      console.log('in target delete request req.query', req.query);
+      console.log('in target delete req.params._is', req.params._id)
       if(!req.query.id) {
         return errorHandler(new Error('validation failed, no target id specified'), res);
       }

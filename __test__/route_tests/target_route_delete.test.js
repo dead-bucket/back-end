@@ -16,31 +16,27 @@ describe('Sign up route', () => {
     return mocks.target.createOne()
       .then(mock => {
         this.mockdata = mock;
-        console.log('mock date target token', this.mockdata.user.token);
+        console.log('mock date target token', this.mockdata.target._id);
       });
   });
-  afterAll(() => mocks.target.removeAll());
+  
   afterAll(() => mocks.auth.removeAll());
   afterAll(() => server.stop());
 
 
-  describe('valid new target', () => {
+  describe('Delete a created target', () => {
     beforeAll(() => {
-      return superagent.post(`${api}/target/`)
+      return superagent
+        .delete(`${api}/target/`)
+        .query(`id=${this.mockdata.target._id}`)
         .set('Authorization', `Bearer ${this.mockdata.user.token}`)
-        .send({
-          name: 'tessa',
-        })
         .then(res => {
           this.response = res;
         })
         .catch(err => console.error(err));
     });
-    it('should return a 201 status code', () => {
-      expect(this.response.status).toBe(201);
-    });
-    it('should have a object in the response body', () => {
-      expect(this.response.body).toBeInstanceOf(Object);
+    it('should return a 204 status code', () => {
+      expect(this.response.status).toBe(204);
     });
   });
 
