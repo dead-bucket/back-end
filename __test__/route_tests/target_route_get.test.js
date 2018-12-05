@@ -55,7 +55,7 @@ describe('Sign up route', () => {
     it('should return a 200 status code', () => {
       expect(this.response.status).toBe(200);
     });
-    it('should have a object in the response body', () => {
+    it('should have a array in the response body', () => {
       expect(this.response.body).toBeInstanceOf(Array);
     });
   });
