@@ -22,7 +22,7 @@ module.exports = router => {
         // console.log('in find one GET route');
         return Entry.findById(req.query.id)
           .then(entry => {
-            console.log('in get one entry', entry);
+            // console.log('in get one entry', entry);
             res.status(200).json(entry);
 
           })

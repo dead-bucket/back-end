@@ -16,7 +16,7 @@ describe('Sign up route', () => {
     return mocks.target.createOne()
       .then(mock => {
         this.mockdata = mock;
-        console.log('mock date target token', this.mockdata.user.token);
+        // console.log('mock date target token', this.mockdata.user.token);
       });
   });
   afterAll(() => mocks.target.removeAll());

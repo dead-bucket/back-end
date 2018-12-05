@@ -20,9 +20,9 @@ module.exports = router => {
     })
   // this is working
     .get(bearerAuth, (req, res) => {
-      // console.log('in get route entries req.query.id', req.query.id);
+     
       if(req.query.id) {
-        // console.log('in find one GET route', req.query.id);
+        
         return Target.findById(req.query.id)
           .then(entry => res.status(200).json(entry))
           .catch(err => errorHandler(err, res));
@@ -52,8 +52,6 @@ module.exports = router => {
     })
   // //  this is working
     .delete(bearerAuth, (req, res) => {
-      console.log('in target delete request req.query', req.query);
-      console.log('in target delete req.params._is', req.params._id)
       if(!req.query.id) {
         return errorHandler(new Error('validation failed, no target id specified'), res);
       }

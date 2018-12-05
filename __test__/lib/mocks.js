@@ -56,7 +56,7 @@ mocks.entry.createOne = function(){
   return mocks.target.createOne()
     .then(target => {
       result.target = target;
-      console.log('target.user.user._id', target.user.user._id);
+      // console.log('target.user.user._id', target.user.user._id);
       return new Entry({
         userId: target.user.user._id,
         recipient: target.target._id,
