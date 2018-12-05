@@ -44,6 +44,18 @@ describe('Sign up route', () => {
     });
   });
 
+  describe('Bad POST request for Target route POST', () => {
+    beforeAll(() => {
+      return superagent
+        .get(`${api}/target/`)
+        .set('Authorization', `Bearer `)
+        .catch(err => this.error = err);
+    });
+    it('should return a 401 status code', () => {
+      expect(this.error.status).toBe(401);
+    });
+    
+  });
   
   
 });

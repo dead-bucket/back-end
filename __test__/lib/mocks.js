@@ -55,15 +55,17 @@ mocks.entry.createOne = function(){
 
   return mocks.target.createOne()
     .then(target => {
+      result.target = target;
+      console.log('target.user.user._id', target.user.user._id);
       return new Entry({
-        userId: target.target.user._id,
+        userId: target.user.user._id,
         recipient: target.target._id,
         mood: faker.lorem.word(),
-        decriprion: faker.lorem.words(10),
+        description: faker.lorem.words(10),
       }).save();
     })
     .then(entry => {
-      result.entrt = entry;
+      result.entry = entry;
       return result;
     });
 };
