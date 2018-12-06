@@ -10,9 +10,9 @@ module.exports = router => {
 
   router.route('/targetentry/')
     .get(bearerAuth, bodyParser, (req, res) => {
-      console.log('target route get', req.body.recipient);
+      // console.log('target route get', req.body.recipient);
       if(req.body.recipient) {
-        console.log('in find one GET route by recipient');
+        // console.log('in find one GET route by recipient');
         return Entry.find({userId: req.user.id, recipient: req.body.recipient})
           .then(entrys => res.status(200).json(entrys))
           .catch(err => errorHandler(err, res));

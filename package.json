@@ -7,8 +7,28 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest -i",
     "dev": "nodemon"
+  },
+  "jest": {
+    "setupFiles": [
+      "./__test__/jest-setup.js"
+    ],
+    "verbose": true,
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageDirectory": "./coverage",
+    "coveragePathIgnorePatterns": [
+      "/__test__/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 0,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
+      }
+    }
   },
   "repository": {
     "type": "git",
@@ -28,10 +48,12 @@
     "dotenv": "^6.1.0",
     "eslint": "^5.9.0",
     "express": "^4.16.4",
+    "faker": "^4.1.0",
     "jest": "^23.6.0",
     "jsonwebtoken": "^8.4.0",
     "mongodb": "^3.1.9",
-    "mongoose": "^5.3.12",
-    "nodemon": "^1.18.7"
+    "mongoose": "^5.2.8",
+    "nodemon": "^1.18.7",
+    "superagent": "^4.0.0"
   }
 }
