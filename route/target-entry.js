@@ -22,7 +22,6 @@ module.exports = router => {
           })
           .then(recipientEntries => allEntries.recipientEntries = recipientEntries)
           .then(() => {
-            console.log('allEntries', allEntries);
             res.status(200).json(allEntries);
           })
           // .then(entrys => res.status(200).json(entrys))
