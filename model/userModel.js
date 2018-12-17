@@ -13,6 +13,7 @@ const userModel = mongoose.Schema({
   lastLogin: { type: Date, default: Date.now()},
   friends: [],
   notifications:[],
+  pendingRequest : [],
 }, {timestamps: true});
 
 // This hashes the password and stores it in hashed form
@@ -55,5 +56,6 @@ userModel.methods.updateLogin = function () {
     .then(() => Promise.resolve(this))
     .catch(console.error);
 };
+
 
 module.exports = mongoose.model('userModel', userModel);
