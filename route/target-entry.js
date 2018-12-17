@@ -12,11 +12,18 @@ module.exports = router => {
     .get(bearerAuth, bodyParser, (req, res) => {
       // console.log('target route get', req.body.recipient);
       // this will retuyrn an array of objects that match the target 
+      let allEntrries = {};
       if(req.body.recipient) {
-        // console.log('in find one GET route by recipient');
-        return Entry.find({userId: req.user.id || req.body.recipient, recipient: req.body.recipient || req.user.id})
-        // return Entry.find({userId: (req.user.id || req.body.recipient), recipient: (req.user.id || req.body.recipient)})
-          .then(entrys => res.status(200).json(entrys))
+        return Entry.find({userId: req.user.id, recipient: req.body.recipient})
+          .then(userEntries => allEntrries.userEntries = userEntries)
+          .then(() => {
+            return Entry.find({userId: req.body.recipient, recipient: req.user.id})
+              .then(recipientEntries => allEntrries.recipientEntries = recipientEntries)
+          })
+          .then(allEntries => {
+            res.status(200).json(allEntries);
+          })
+          // .then(entrys => res.status(200).json(entrys))
           .catch(err => errorHandler(err, res));
       }
       if(!req.body.recipient) {
