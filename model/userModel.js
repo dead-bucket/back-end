@@ -8,6 +8,7 @@ const userModel = mongoose.Schema({
   username : { type: String, required: true, unique: true},
   email : { type: String, required: true, unique: true},
   password : { type: String, required: true},
+  picture : { type: String, required: false, default:'https://img.icons8.com/android/100/000000/user.png'},
   tokenSeed : { type: String, unique: true},
   phoneNumber : { type: String, required: false},
   lastLogin: { type: Date, default: Date.now()},
