@@ -27,9 +27,9 @@ describe('Sign up route', () => {
   describe('Get an Entry', () => {
     beforeAll(() => {
       return superagent
-        .put(`${api}/entry/`)
+        .put(`${api}/entry/${this.mockdata.entry._id}`)
         .set('Authorization', `Bearer ${this.mockdata.target.user.token}`)
-        .query(`id=${this.mockdata.entry._id}`)
+        // .query(`id=${this.mockdata.entry._id}`)
         .send({ mood: 'happy'})
         .then(res => {
           this.response = res;

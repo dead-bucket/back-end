@@ -18,9 +18,9 @@ module.exports = router => {
   // this is working
     .get(bearerAuth, (req, res) => {
       // console.log('in get route entries', req.query.id);
-      if(req.query.id) {
+      if(req.params.id) {
         // console.log('in find one GET route');
-        return Entry.findById(req.query.id)
+        return Entry.findById(req.params.id)
           .then(entry => {
             // console.log('in get one entry', entry);
             res.status(200).json(entry);
@@ -41,11 +41,11 @@ module.exports = router => {
     })
   //this is working 
     .put(bearerAuth, bodyParser, (req, res) => {
-      if(!req.query.id) {
+      if(!req.params.id) {
         return errorHandler(new Error('validation failed, no entry id specified'), res);
       }
 
-      Entry.findById(req.query.id)
+      Entry.findById(req.params.id)
         .then(entry => {
           if(!entry) return Promise.reject(new Error('Authorization error'));
           return entry.set(req.body).save();        
@@ -55,11 +55,11 @@ module.exports = router => {
     })
   //  this is working
     .delete(bearerAuth, (req, res) => {
-      if(!req.query.id) {
+      if(!req.params.id) {
         return errorHandler(new Error('validation failed, no entry id specified'), res);
       }
 
-      return Entry.findById(req.query.id)
+      return Entry.findById(req.params.id)
         .then(entry => {
           if(entry) return entry.remove();
           Promise.reject(new Error('objectid failed'));

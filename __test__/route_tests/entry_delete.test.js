@@ -26,9 +26,9 @@ describe('Sign up route', () => {
   describe('Delete an Entry', () => {
     beforeAll(() => {
       return superagent
-        .delete(`${api}/entry/`)
+        .delete(`${api}/entry/${this.mockdata.target.target._id}`)
         .set('Authorization', `Bearer ${this.mockdata.target.user.token}`)
-        .query(`id=${this.mockdata.target.target._id}`)
+        // .query(`id=${this.mockdata.target.target._id}`)
         .then(res => {
           this.response = res;
         })
