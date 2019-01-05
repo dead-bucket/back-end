@@ -27,8 +27,8 @@ describe('Sign up route', () => {
   describe('test a PUT route on target', () => {
     beforeAll(() => {
       return superagent
-        .put(`${api}/target/`)
-        .query(`id=${this.mockdata.target._id}`)
+        .put(`${api}/target/${this.mockdata.target._id}`)
+        // .query(`id=${this.mockdata.target._id}`)
         .set('Authorization', `Bearer ${this.mockdata.user.token}`)
         .send({photo: 'blablabla'})
         .then(res => {

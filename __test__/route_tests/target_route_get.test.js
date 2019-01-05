@@ -27,8 +27,8 @@ describe('Sign up route', () => {
   describe('Get a created target', () => {
     beforeAll(() => {
       return superagent
-        .get(`${api}/target/`)
-        .query(`id=${this.mockdata.target._id}`)
+        .get(`${api}/target/${this.mockdata.target._id}`)
+        // .query(`id=${this.mockdata.target._id}`)
         .set('Authorization', `Bearer ${this.mockdata.user.token}`)
         .then(res => {
           this.response = res;

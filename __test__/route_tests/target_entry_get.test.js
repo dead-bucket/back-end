@@ -37,8 +37,8 @@ describe('Sign up route', () => {
     it('should return a 200 status code', () => {
       expect(this.response.status).toBe(200);
     });
-    it('should expect an array in the reqponse', () => {
-      expect(this.response.body).toBeInstanceOf(Array);
+    it('should expect an object in the response', () => {
+      expect(this.response.body).toBeInstanceOf(Object);
     })
   });
   describe('Bad Request with no bearer token', () => {

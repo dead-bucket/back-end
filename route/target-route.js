@@ -20,10 +20,10 @@ module.exports = router => {
     })
   // this is working
     .get(bearerAuth, (req, res) => {
-     
-      if(req.query.id) {
+      //console.log('request params',req.params.id);
+      if(req.params.id) {
         
-        return Target.findById(req.query.id)
+        return Target.findById(req.params.id)
           .then(entry => res.status(200).json(entry))
           .catch(err => errorHandler(err, res));
       }
@@ -39,10 +39,10 @@ module.exports = router => {
     })
   //this is working 
     .put(bearerAuth, bodyParser, (req, res) => {
-      if(!req.query.id) {
+      if(!req.params.id) {
         return errorHandler(new Error('validation failed, no target id specified'), res);
       }
-      Target.findById(req.query.id)
+      Target.findById(req.params.id)
         .then(entry => {
           if(!entry) return Promise.reject(new Error('Authorization error'));
           return entry.set(req.body).save();        
@@ -52,10 +52,10 @@ module.exports = router => {
     })
   // //  this is working
     .delete(bearerAuth, (req, res) => {
-      if(!req.query.id) {
+      if(!req.params.id) {
         return errorHandler(new Error('validation failed, no target id specified'), res);
       }
-      return Target.findById(req.query.id)
+      return Target.findById(req.params.id)
         .then(targetEntry => {
           // console.log('deleted target entry', targetEntry);
           if(targetEntry)
