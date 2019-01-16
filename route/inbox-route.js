@@ -14,14 +14,14 @@ module.exports = router => {
       // This will return an array with all the entries that have been
       // sent to user from the target. 
      
-      if(req.body.recipient) {
-        return Entry.find({userId: req.body.recipient, recipient: req.user.id, delivered: true})
+      if(req.body.sender) {
+        return Entry.find({userId: req.body.sender, recipient: req.user.id, delivered: true})
           .then(results => {
             res.status(200).json(results);
           })
           .catch(err => errorHandler(err, res));
       }
-      if(!req.body.recipient) {
+      if(!req.body.sender) {
         return errorHandler(new Error('objectid failed, no recipient specified'), res);
       }
       
