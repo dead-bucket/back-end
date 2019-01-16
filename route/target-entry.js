@@ -9,7 +9,7 @@ const bearerAuth = require('../lib/bearer-auth-middleware');
 module.exports = router => {
 
   router.route('/targetentry/')
-    .get(bearerAuth, bodyParser, (req, res) => {
+    .post(bearerAuth, bodyParser, (req, res) => {
       // console.log('target route get', req.body.recipient);
       // this will retuyrn an array of objects that match the target 
       let allEntries = {};
