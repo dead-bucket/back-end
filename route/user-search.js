@@ -15,9 +15,17 @@ module.exports = router => {
     .get(bearerAuth, bodyParser, (req, res) => {
      
       if(req.body.email) {
-        
         return User.find({email: req.body.email })
-          .then(entry => res.status(200).json(entry))
+          .then(entry => {
+            if (entry.length > 0) {
+              console.log('user found');
+              res.status(200).json(entry);
+            } else {
+              console.log('no user found');
+              res.status(404).json(`no user with email ${req.body.email} exists`);
+            }
+
+          })
           .catch(err => errorHandler(err, res));
       }
 
