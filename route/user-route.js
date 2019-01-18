@@ -10,14 +10,21 @@ module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
     let pw = req.body.password;
     delete req.body.password;
-
+    console.log('user image', req.file);
     let user = new User(req.body);
     
 
     user.generatePasswordHash(pw)
       .then(newUser => newUser.save())
+      .then(userRes => req.user = userRes)
       .then(userRes => userRes.generateToken())
-      .then(token => res.status(201).json(token))
+      .then(token => {
+        let blob = {};
+        blob.user = req.user;
+        blob.token = token;
+        res.status(201).json(blob);
+
+      })
       .catch(err => errorHandler(err, res));
   });
 
@@ -29,9 +36,16 @@ module.exports = function(router) {
           ? user.comparePasswordHash(req.userModelHeader.password)
           : Promise.reject(new Error('Authorization Failed. Username required.'))
       )
+      .then(user => req.user = user)
       .then(user => user.updateLogin())
       .then(user => user.generateToken())
-      .then(token => res.status(200).json(token))
+      .then(token => {
+        let blob = {};
+        blob.token = token;
+        blob.user = req.user;
+        res.status(200).json(blob);
+
+      })
       .catch(err => errorHandler(err, res));
   });
   
