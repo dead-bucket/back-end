@@ -5,14 +5,16 @@ const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const basicAuth = require('../lib/basic-auth-middleware');
 const bearerAuth = require('../lib/bearer-auth-middleware');
+const uploadPic = require('../file_upload');
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
     let pw = req.body.password;
     delete req.body.password;
-    console.log('user image', req.file);
+    console.log('user image', req.body.picture);
     let user = new User(req.body);
-    
+    let location = uploadPic(req.body.picture);
+    console.log('back from upload', location);
 
     user.generatePasswordHash(pw)
       .then(newUser => newUser.save())
