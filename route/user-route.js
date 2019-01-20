@@ -13,13 +13,11 @@ module.exports = function(router) {
     delete req.body.password;
     let proficeImage = req.body.picture;
     req.body.picture = null;
-    console.log('user image', req.body.picture);
     let user = new User(req.body);
-    console.log('new user info. ', user._id);
     return uploadPic(proficeImage, user._id)
       .then(data => {
         user.picture = data.Location;
-        console.log('data back from upload', data);
+        // console.log('data back from upload', data);
         return user;
       })
       .then(() => {
@@ -28,7 +26,7 @@ module.exports = function(router) {
           .then(userRes => req.user = userRes)
           .then(userRes => userRes.generateToken())
           .then(token => {
-            console.log('hello ______________________');
+            // console.log('hello ______________________');
             let blob = {};
             blob.user = req.user;
             blob.token = token;

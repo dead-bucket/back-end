@@ -6,7 +6,7 @@ const errorHandler = require('../lib/error-handler');
 
 const Target = require('../model/targetModel');
 const bearerAuth = require('../lib/bearer-auth-middleware');
-
+const uploadPic = require('../file_upload');
 
 
 module.exports = router => {
@@ -14,9 +14,26 @@ module.exports = router => {
     .post(bearerAuth, bodyParser, (req, res) => {
       // console.log('in target route post!!');
       req.body.userId = req.user._id;
-      return new Target(req.body).save()
-        .then(createdEntry => res.status(201).json(createdEntry))
-        .catch(err => errorHandler(err, res));
+      // console.log('in create new target', req.body.image);
+      if (!req.body.image) {
+        return new Target(req.body).save()
+          .then(createdEntry => res.status(201).json(createdEntry))
+          .catch(err => errorHandler(err, res));
+      }
+      if(req.body.image) {
+        let targetImage = req.body.image;
+        req.body.image = null;
+        let targetTemp = new Target(req.body);
+        return uploadPic(targetImage,targetTemp._id)
+          .then(data =>{
+            targetTemp.picture = data.Location;
+            return targetTemp;
+          })
+          .then(target => target.save())
+          .then(createdEntry => res.status(201).json(createdEntry))
+          .catch(err => errorHandler(err, res));
+
+      }
     })
   // this is working
     .get(bearerAuth, (req, res) => {
