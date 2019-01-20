@@ -11,23 +11,37 @@ module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
     let pw = req.body.password;
     delete req.body.password;
+    let proficeImage = req.body.picture;
+    req.body.picture = null;
     console.log('user image', req.body.picture);
     let user = new User(req.body);
-    let location = uploadPic(req.body.picture);
-    console.log('back from upload', location);
-
-    user.generatePasswordHash(pw)
-      .then(newUser => newUser.save())
-      .then(userRes => req.user = userRes)
-      .then(userRes => userRes.generateToken())
-      .then(token => {
-        let blob = {};
-        blob.user = req.user;
-        blob.token = token;
-        res.status(201).json(blob);
+    console.log('new user info. ', user._id);
+    return uploadPic(proficeImage, user._id)
+      .then(data => {
+        user.picture = data.Location;
+        console.log('data back from upload', data);
+        return user;
+      })
+      .then(() => {
+        return user.generatePasswordHash(pw)
+          .then(newUser => newUser.save())
+          .then(userRes => req.user = userRes)
+          .then(userRes => userRes.generateToken())
+          .then(token => {
+            console.log('hello ______________________');
+            let blob = {};
+            blob.user = req.user;
+            blob.token = token;
+            res.status(201).json(blob);
+    
+          })
+          .catch(err => errorHandler(err, res));
 
       })
       .catch(err => errorHandler(err, res));
+        
+    
+
   });
 
   router.get('/signin', basicAuth, (req, res) => {
