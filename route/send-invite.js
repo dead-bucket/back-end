@@ -16,7 +16,7 @@ function validateEmail(email) {
 module.exports = router => {
   router.route('/sendinvite/')
     
-    .get(bearerAuth, bodyParser, (req, res) => {
+    .post(bearerAuth, bodyParser, (req, res) => {
 
       // if(!validateEmail(req.body.email)) return Promise.reject(new Error('Validation error'));
       if(req.body.email) {
