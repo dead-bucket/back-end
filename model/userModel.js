@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 
 const userModel = mongoose.Schema({
   username : { type: String, required: true, unique: true},
+  firstname : { type: String, required: false},
+  lastname : { type: String, required: false},
   email : { type: String, required: true, unique: true},
   password : { type: String, required: true},
   picture : { type: String, required: false, default:'https://img.icons8.com/android/100/000000/user.png'},

@@ -22,10 +22,16 @@ module.exports = router => {
       if(req.body.email) {
         if(!validateEmail(req.body.email)) return errorHandler(new Error('validation failed, not a valid email format'), res);
         // console.log('user search email', req.body.email);
-        sendEmail(req);
+        return sendEmail(req)
+          .then(data => {
+            res.status(200).json(data);
+          })
+          .catch(err => errorHandler(err, res));
         
-        if(!req.body.email) return errorHandler(new Error('validation failed, no email specified'), res);
-       
-  
-      } });
+          
+          
+      }
+      if(!req.body.email) return errorHandler(new Error('validation failed, no email specified'), res);
+
+    });
 };
