@@ -14,15 +14,10 @@ module.exports = router => {
 
     return Target.find({userId: req.user._id})
       .then(entries => {
-        // console.log('target enytries', entries);
         dashboardObject = entries;
-        return dashboardObject;
-      })
-      .then(object => {
-        console.log('concatted object', object);
       })
       .then(() => {
-        return User.find({friends: { "$in" : [`${req.user._id}`]}});
+        return User.find({friends: { '$in' : [`${req.user._id}`]}});
       })
       .then(userEntries => {
         let returnObject = dashboardObject.concat(userEntries);
