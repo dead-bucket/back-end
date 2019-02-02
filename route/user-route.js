@@ -11,32 +11,51 @@ module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
     let pw = req.body.password;
     delete req.body.password;
-    let proficeImage = req.body.picture;
+    let profileImage = req.body.picture;
     req.body.picture = null;
     let user = new User(req.body);
-    return uploadPic(proficeImage, user._id)
-      .then(data => {
-        user.picture = data.Location;
-        // console.log('data back from upload', data);
-        return user;
-      })
-      .then(() => {
-        return user.generatePasswordHash(pw)
-          .then(newUser => newUser.save())
-          .then(userRes => req.user = userRes)
-          .then(userRes => userRes.generateToken())
-          .then(token => {
-            // console.log('hello ______________________');
-            let blob = {};
-            blob.user = req.user;
-            blob.token = token;
-            res.status(201).json(blob);
-    
-          })
-          .catch(err => errorHandler(err, res));
+    if(profileImage) {
+      return uploadPic(profileImage, user._id)
+        .then(data => {
+          user.picture = data.Location;
+          // console.log('data back from upload', data);
+          return user;
+        })
+        .then(() => {
+          return user.generatePasswordHash(pw)
+            .then(newUser => newUser.save())
+            .then(userRes => req.user = userRes)
+            .then(userRes => userRes.generateToken())
+            .then(token => {
+              // console.log('hello ______________________');
+              let blob = {};
+              blob.user = req.user;
+              blob.token = token;
+              res.status(201).json(blob);
+          
+            })
+            .catch(err => errorHandler(err, res));
+        
+        })
+        .catch(err => errorHandler(err, res));
+    }
 
-      })
-      .catch(err => errorHandler(err, res));
+    if(!profileImage) {
+      user.picture = 'https://img.icons8.com/android/100/000000/user.png';
+      return user.generatePasswordHash(pw)
+        .then(newUser => newUser.save())
+        .then(userRes => req.user = userRes)
+        .then(userRes => userRes.generateToken())
+        .then(token => {
+          // console.log('hello ______________________');
+          let blob = {};
+          blob.user = req.user;
+          blob.token = token;
+          res.status(201).json(blob);
+    
+        })
+        .catch(err => errorHandler(err, res));
+    } 
         
     
 
