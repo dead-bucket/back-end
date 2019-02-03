@@ -50,7 +50,7 @@ userModel.methods.generateToken = function() {
   return this.generateTokenSeed()
     .then(tokenSeed => {
       return jwt.sign({token: tokenSeed}, process.env.APP_SECRET);
-    })
+    })   
     .catch(err => err);
 };
 userModel.methods.updateLogin = function () {
