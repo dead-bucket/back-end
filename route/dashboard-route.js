@@ -25,8 +25,8 @@ module.exports = router => {
             picture: userObject.picture,
             username:userObject.username,
             email: userObject.email,
-            firstname: userObject.firstname ? userObject.firstname : null,
-            lastname: userObject.lastname ? userObject.lastname : null,
+            firstname: userObject.firstname ? userObject.firstname : '',
+            lastname: userObject.lastname ? userObject.lastname : '',
             count: count,
           }
           
@@ -41,7 +41,7 @@ module.exports = router => {
     });
   }
 
-  async function processArray(array) {
+  async function processArray(array, sortby) {
     let tempArray = array;
     let returnArray = [];
     for (let i = 0; i < tempArray.length; i++) {
@@ -54,14 +54,24 @@ module.exports = router => {
      
     }
     // points.sort(function(a, b){return a-b});
-    returnArray.sort(function(a,b) {return (b.count - a.count)});
+    if(sortby === 'alpha') {
+      console.log('in alpha sort');
+      returnArray.sort(function(a, b){
+        if(a.lastname.toLowerCase() < b.lastname.toLowerCase()) { return -1; }
+        if(a.lastname.toLowerCase() > b.lastname.toLowerCase()) { return 1; }
+        return 0;
+    })
+    } else {
+      console.log('in count sort')
+      returnArray.sort(function(a,b) {return (b.count - a.count)});
+    }
     return returnArray;
   }
 
 
   router.get('/dashboard/', bodyParser, bearerAuth, (req, res) => {
     let dashboardObject,returnObject = [];
-
+    console.log('req.user', req.user);
     return Target.find({userId: req.user._id})
       .then(entries => {
         dashboardObject = entries;
@@ -74,14 +84,14 @@ module.exports = router => {
         return returnObject;
       })
       .then(array => {
-        let testArray = processArray(array);
+        let testArray = processArray(array, req.user.sortby);
         
         return testArray;
       })
-      .then(array => {
-        console.log('after count function  ', array);
-        return array;
-      })
+      // .then(array => {
+      //   console.log('after count function  ', array);
+      //   return array;
+      // })
       .then(testArray => {
         
         res.status(200).json(testArray);

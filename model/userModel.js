@@ -14,6 +14,7 @@ const userModel = mongoose.Schema({
   tokenSeed : { type: String, unique: true},
   phoneNumber : { type: String, required: false},
   lastLogin: { type: Date, default: Date.now()},
+  sortby: { type: String, required: false},
   friends: [],
   notifications:[],
   pendingRequest : [],
