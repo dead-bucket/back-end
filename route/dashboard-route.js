@@ -46,27 +46,22 @@ module.exports = router => {
     let tempArray = array;
     let returnArray = [];
     for (let i = 0; i < tempArray.length; i++) {
-      // console.log('type of item', typeof(array[i]));
-      // array[i].text = 'hello';
       let temp = await countPromise(tempArray[i])
-     
-        
         returnArray.push(temp);
-     
     }
-    // points.sort(function(a, b){return a-b});
+    
     if(sortby === 'alpha') {
-      // console.log('in alpha sort');
       returnArray.sort(function(a, b){
         if(a.lastname.toLowerCase() < b.lastname.toLowerCase()) { return -1; }
         if(a.lastname.toLowerCase() > b.lastname.toLowerCase()) { return 1; }
         return 0;
-    })
+      })
     } else {
       // console.log('in count sort')
+      
       returnArray.sort(function(a,b) {return (b.count - a.count)});
     }
-    
+    // console.log('return array from sort', returnArray);
     return returnArray;
   }
 
