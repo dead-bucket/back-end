@@ -14,23 +14,28 @@ module.exports = router => {
   //   let count = await Entries.countDocuments({recipient: userObject._id});
   //   return count;
   // }
+  function processObject(userObject) {
+    let newObject = {
+      _id: userObject._id,
+      picture: userObject.picture,
+      username:userObject.username,
+      email: userObject.email,
+      firstname: userObject.firstname ? userObject.firstname : '',
+      lastname: userObject.lastname ? userObject.lastname : '',
+      priority: false,
+    }
+    
+    return newObject;
+
+  }
   function countPromise(userObject) {
     
     return new Promise(resolve => {
       Entries.countDocuments({recipient: userObject._id})
         .then(count => {
           // console.log('_______________________')
-          let newObject = {
-            _id: userObject._id,
-            picture: userObject.picture,
-            username:userObject.username,
-            email: userObject.email,
-            firstname: userObject.firstname ? userObject.firstname : '',
-            lastname: userObject.lastname ? userObject.lastname : '',
-            count: count,
-            priority: false,
-          }
-          
+          let newObject = processObject(userObject);
+          newObject.count = count;
           return newObject;
           
         })
@@ -45,12 +50,12 @@ module.exports = router => {
   async function processArray(array, sortby) {
     let tempArray = array;
     let returnArray = [];
-    for (let i = 0; i < tempArray.length; i++) {
-      let temp = await countPromise(tempArray[i])
-        returnArray.push(temp);
-    }
     
     if(sortby === 'alpha') {
+      array.forEach(element => {
+        returnArray.push(processObject(element));
+      });
+      console.log('in alpha sort return array', returnArray);
       returnArray.sort(function(a, b){
         if(a.lastname.toLowerCase() < b.lastname.toLowerCase()) { return -1; }
         if(a.lastname.toLowerCase() > b.lastname.toLowerCase()) { return 1; }
@@ -59,6 +64,10 @@ module.exports = router => {
     } else {
       // console.log('in count sort')
       
+      for (let i = 0; i < tempArray.length; i++) {
+        let temp = await countPromise(tempArray[i])
+          returnArray.push(temp);
+      }
       returnArray.sort(function(a,b) {return (b.count - a.count)});
     }
     // console.log('return array from sort', returnArray);
