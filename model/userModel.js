@@ -14,6 +14,8 @@ const userModel = mongoose.Schema({
   tokenSeed : { type: String, unique: true},
   phoneNumber : { type: String, required: false},
   lastLogin: { type: Date, default: Date.now()},
+  sortby: { type: String, required: false, default:'alpha'},
+  priority: [],
   friends: [],
   notifications:[],
   pendingRequest : [],
@@ -50,7 +52,7 @@ userModel.methods.generateToken = function() {
   return this.generateTokenSeed()
     .then(tokenSeed => {
       return jwt.sign({token: tokenSeed}, process.env.APP_SECRET);
-    })
+    })   
     .catch(err => err);
 };
 userModel.methods.updateLogin = function () {
