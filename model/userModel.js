@@ -15,6 +15,7 @@ const userModel = mongoose.Schema({
   phoneNumber : { type: String, required: false},
   lastLogin: { type: Date, default: Date.now()},
   sortby: { type: String, required: false},
+  priority: [],
   friends: [],
   notifications:[],
   pendingRequest : [],

@@ -3,7 +3,7 @@
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const Entries = require('../model/entriesModel');
-
+const Priority = require('../lib/manage-priority');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 const Target = require('../model/targetModel');
 const User = require('../model/userModel');
@@ -28,6 +28,7 @@ module.exports = router => {
             firstname: userObject.firstname ? userObject.firstname : '',
             lastname: userObject.lastname ? userObject.lastname : '',
             count: count,
+            priority: false,
           }
           
           return newObject;
@@ -55,23 +56,24 @@ module.exports = router => {
     }
     // points.sort(function(a, b){return a-b});
     if(sortby === 'alpha') {
-      console.log('in alpha sort');
+      // console.log('in alpha sort');
       returnArray.sort(function(a, b){
         if(a.lastname.toLowerCase() < b.lastname.toLowerCase()) { return -1; }
         if(a.lastname.toLowerCase() > b.lastname.toLowerCase()) { return 1; }
         return 0;
     })
     } else {
-      console.log('in count sort')
+      // console.log('in count sort')
       returnArray.sort(function(a,b) {return (b.count - a.count)});
     }
+    
     return returnArray;
   }
 
 
   router.get('/dashboard/', bodyParser, bearerAuth, (req, res) => {
     let dashboardObject,returnObject = [];
-    console.log('req.user', req.user);
+    // console.log('req.user', req.user);
     return Target.find({userId: req.user._id})
       .then(entries => {
         dashboardObject = entries;
@@ -87,6 +89,12 @@ module.exports = router => {
         let testArray = processArray(array, req.user.sortby);
         
         return testArray;
+      })
+      .then(testArray => {
+        // console.log('in priority section')
+
+        let dashArray = Priority(testArray, req.user.priority);
+        return dashArray;
       })
       // .then(array => {
       //   console.log('after count function  ', array);

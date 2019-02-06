@@ -38,6 +38,7 @@ module.exports = function(router) {
             user.picture = req.body.picture ? req.body.picture : user.picture;
             user.phoneNumber = req.body.phoneNumber ? req.body.phoneNumber : user.phoneNumber;
             user.sortby = req.body.sortby ? req.body.sortby : user.sortby;
+            
           } else {
             Promise.reject(new Error('Authorization Failed. No user found'));
           }
