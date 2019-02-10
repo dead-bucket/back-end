@@ -13,6 +13,24 @@ function validateEmail(email) {
 
 
 module.exports = router => {
+  // function searchForUser (searchId) {
+  //   return new Promise(resolve => {
+  //     console.log('in find-user');
+  //     return User.find({email: `${searchId}`})
+  //       .then(data => {
+  //         if(data.length > 0) {
+  //           console.log('data', data);
+  //           resolve(data);
+  //         } else {
+  //           console.log('in else');
+  //           resolve('no user');
+  //         }
+  //       })
+  //       .catch(err => console.error(err));
+  
+  //   });
+  // }
+
   router.route('/usersearch/:email?')
     
     .get(bearerAuth, bodyParser, (req, res) => {
