@@ -4,6 +4,7 @@ const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const Entry = require('../model/entriesModel');
 const bearerAuth = require('../lib/bearer-auth-middleware');
+const Target = require('../model/targetModel');
 
 
 module.exports = router => {
@@ -20,6 +21,10 @@ module.exports = router => {
           console.log('results', results);
           if(!results) return Promise.reject(new Error('Authorization error'));
                   
+        })
+        .then(() => {
+          return Target.deleteOne({_id: req.query.id})
+            .catch(err => errorHandler(err, res));
         })
         .then(() => res.sendStatus(204))
         .catch(err => errorHandler(err, res));

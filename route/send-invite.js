@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-const bodyParser = require("body-parser").json();
-const errorHandler = require("../lib/error-handler");
-const sendEmail = require("../lib/sendnodemailer");
-const User = require("../model/userModel");
+const bodyParser = require('body-parser').json();
+const errorHandler = require('../lib/error-handler');
+const sendEmail = require('../lib/sendnodemailer');
+const User = require('../model/userModel');
 
-const bearerAuth = require("../lib/bearer-auth-middleware");
+const bearerAuth = require('../lib/bearer-auth-middleware');
 function validateEmail(email) {
   var re = /\S+@\S+\.\S+/;
   return re.test(email);
@@ -13,14 +13,14 @@ function validateEmail(email) {
 
 module.exports = router => {
   router
-    .route("/sendinvite/")
+    .route('/sendinvite/')
 
     .post(bearerAuth, bodyParser, (req, res) => {
-      console.log("send invite email", req.body.email);
+      console.log('send invite email', req.body.email);
       if (req.body.email) {
         if (!validateEmail(req.body.email))
           return errorHandler(
-            new Error("validation failed, not a valid email format"),
+            new Error('validation failed, not a valid email format'),
             res
           );
         return sendEmail(req)
@@ -36,14 +36,14 @@ module.exports = router => {
             return data;
           })
           .then(data => {
-            console.log("data back from send email", data.accepted[0]);
+            console.log('data back from send email', data.accepted[0]);
             res.status(200).json(data);
           })
           .catch(err => errorHandler(err, res));
       }
       if (!req.body.email)
         return errorHandler(
-          new Error("validation failed, no email specified"),
+          new Error('validation failed, no email specified'),
           res
         );
     });
