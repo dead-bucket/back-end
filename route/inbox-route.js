@@ -1,15 +1,15 @@
-"use strict";
+'use strict';
 
-const bodyParser = require("body-parser").json();
-const errorHandler = require("../lib/error-handler");
-const Entry = require("../model/entriesModel");
-const bearerAuth = require("../lib/bearer-auth-middleware");
+const bodyParser = require('body-parser').json();
+const errorHandler = require('../lib/error-handler');
+const Entry = require('../model/entriesModel');
+const bearerAuth = require('../lib/bearer-auth-middleware');
 
 module.exports = router => {
-  router.route("/inbox/:sender").get(bearerAuth, bodyParser, (req, res) => {
+  router.route('/inbox/:sender').get(bearerAuth, bodyParser, (req, res) => {
     // This will return an array with all the entries that have been
     // sent to user from the target.
-    console.log("Sender params: ", req.params.sender);
+    console.log('Sender params: ', req.params.sender);
     if (req.params.sender) {
       return Entry.find({
         userId: req.params.sender,
@@ -23,7 +23,7 @@ module.exports = router => {
     }
     if (!req.params.sender) {
       return errorHandler(
-        new Error("objectid failed, no recipient specified"),
+        new Error('objectid failed, no recipient specified'),
         res
       );
     }
