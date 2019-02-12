@@ -14,7 +14,7 @@ module.exports = router => {
       return Entry.find({
         userId: req.params.sender,
         recipient: req.user.id,
-        delivered: true
+        delivered: true,
       })
         .then(results => {
           res.status(200).json(results);

@@ -16,10 +16,10 @@ module.exports = router => {
       if(!req.query.id) {
         return errorHandler(new Error('validation failed, no entry id specified'), res);
       }
-      console.log('user info', req.query.id , req.body.newUser);
+      // console.log('user info', req.query.id , req.body.newUser);
       Entry.updateMany({userId: req.user.id, recipient: req.query.id}, {recipient: `${req.body.newUser}`})
         .then(results => {
-          console.log('results', results);
+          // console.log('results', results);
           if(!results) return Promise.reject(new Error('Authorization error'));
                   
         })
