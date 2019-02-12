@@ -5,6 +5,7 @@ const errorHandler = require('../lib/error-handler');
 const Entry = require('../model/entriesModel');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 const Target = require('../model/targetModel');
+const User = require('../model/userModel');
 
 
 module.exports = router => {
@@ -26,7 +27,15 @@ module.exports = router => {
           return Target.deleteOne({_id: req.query.id})
             .catch(err => errorHandler(err, res));
         })
-        .then(() => res.sendStatus(204))
+        .then(() => {
+          return User.find({_id: req.body.newUser})
+            .then(user => {
+              // console.log('new user found###########', user[0]);
+              res.status(202).json(user[0]);
+            })
+            .catch(err => errorHandler(err, res));
+          
+        })
         .catch(err => errorHandler(err, res));
     });
   
