@@ -18,6 +18,7 @@ const userModel = mongoose.Schema({
   priority: [],
   friends: [],
   notifications:[],
+  newmessages: [],
   pendingRequest : [],
 }, {timestamps: true});
 

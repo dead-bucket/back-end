@@ -7,7 +7,8 @@ const Entry = mongoose.Schema({
   recipient: {type: mongoose.Schema.Types.ObjectId, required: true, ref: 'targetModel'},
   mood: {type: String, required: false},
   description: {type: String, required: false },
-  delivered: { type: Boolean, default: false }, 
+  delivered: { type: Boolean, default: false },
+  read: { type: Boolean, default: false}, 
 }, {timestamps: true});
 
 

@@ -15,6 +15,10 @@ module.exports = router => {
       .then(user => {
         if(user) {
           if(!user.friends.includes(req.body.friend)) {
+            if(user.notifications.some(item => item.id === req.body.fiend)) {
+              let tempNotifications = user.notifications.filter(el => el._id !== req.body.friend);
+              user.notifications = tempNotifications;
+            }
             user.friends.push(req.body.friend);
             user.save();
             return user;
