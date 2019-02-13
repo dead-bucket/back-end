@@ -55,7 +55,7 @@ module.exports = router => {
       array.forEach(element => {
         returnArray.push(processObject(element));
       });
-      console.log('in alpha sort return array', returnArray);
+      // console.log('in alpha sort return array', returnArray);
       returnArray.sort(function(a, b){
         if(a.lastname.toLowerCase() < b.lastname.toLowerCase()) { return -1; }
         if(a.lastname.toLowerCase() > b.lastname.toLowerCase()) { return 1; }
