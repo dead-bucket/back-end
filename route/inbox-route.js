@@ -10,26 +10,26 @@ module.exports = router => {
   router.route('/inbox/:sender').get(bearerAuth, bodyParser, (req, res) => {
     // This will return an array with all the entries that have been
     // sent to user from the target.
-    console.log('Sender params: ', req.params.sender);
+    // console.log('Sender params: ', req.params.sender);
     if (req.params.sender) {
       return Entry.find({
         userId: req.params.sender,
         recipient: req.user.id,
         delivered: true,
       })
-        .then(results => {
+        // .then(results => {
           
-          if(req.user.newmessages.includes(req.params.sender)) {
-            User.findOne({_id: req.user.id})
-              .then(user => {
-                let temp = user.newmessages.filter(el => el !== req.params.sender);
-                user.newmessages = temp;
-                user.save();
-              });
-          }
-          return results;
-          // res.status(200).json(results);
-        })
+        //   if(req.user.newmessages.includes(req.params.sender)) {
+        //     User.findOne({_id: req.user.id})
+        //       .then(user => {
+        //         let temp = user.newmessages.filter(el => el !== req.params.sender);
+        //         user.newmessages = temp;
+        //         user.save();
+        //       });
+        //   }
+        //   return results;
+        //   // res.status(200).json(results);
+        // })
         .then(results => res.status(200).json(results))
         .catch(err => errorHandler(err, res));
     }
