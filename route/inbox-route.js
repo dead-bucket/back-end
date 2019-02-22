@@ -7,16 +7,17 @@ const bearerAuth = require('../lib/bearer-auth-middleware');
 const User = require('../model/userModel');
 
 module.exports = router => {
-  router.route('/inbox/:sender').get(bearerAuth, bodyParser, (req, res) => {
+  router.route('/inbox/:sender?')
+    .get(bearerAuth, bodyParser, (req, res) => {
     // This will return an array with all the entries that have been
     // sent to user from the target.
     // console.log('Sender params: ', req.params.sender);
-    if (req.params.sender) {
-      return Entry.find({
-        userId: req.params.sender,
-        recipient: req.user.id,
-        delivered: true,
-      })
+      if (req.query.sender) {
+        return Entry.find({
+          userId: req.query.sender,
+          recipient: req.user.id,
+          delivered: true,
+        })
         // .then(results => {
           
         //   if(req.user.newmessages.includes(req.params.sender)) {
@@ -30,14 +31,14 @@ module.exports = router => {
         //   return results;
         //   // res.status(200).json(results);
         // })
-        .then(results => res.status(200).json(results))
-        .catch(err => errorHandler(err, res));
-    }
-    if (!req.params.sender) {
-      return errorHandler(
-        new Error('objectid failed, no recipient specified'),
-        res
-      );
-    }
-  });
+          .then(results => res.status(200).json(results))
+          .catch(err => errorHandler(err, res));
+      }
+      if (!req.query.sender) {
+        return errorHandler(
+          new Error('objectid failed, no recipient specified'),
+          res
+        );
+      }
+    });
 };
