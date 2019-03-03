@@ -64,4 +64,5 @@ userModel.methods.updateLogin = function () {
 };
 
 
+
 module.exports = mongoose.model('userModel', userModel);

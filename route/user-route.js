@@ -6,6 +6,7 @@ const errorHandler = require('../lib/error-handler');
 const basicAuth = require('../lib/basic-auth-middleware');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 const uploadPic = require('../file_upload');
+const createNotifications = require('../lib/create-notifications');
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
@@ -45,6 +46,10 @@ module.exports = function(router) {
       return user.generatePasswordHash(pw)
         .then(newUser => newUser.save())
         .then(userRes => req.user = userRes)
+        .then(userRes => {
+          createNotifications(userRes.email, userRes);
+          return userRes;
+        })
         .then(userRes => userRes.generateToken())
         .then(token => {
           // console.log('hello ______________________');
