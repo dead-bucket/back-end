@@ -25,7 +25,7 @@ const userModel = mongoose.Schema({
 // This hashes the password and stores it in hashed form
 userModel.methods.generatePasswordHash = function(password) {
   if(!password) return Promise.reject(new Error('Authorization failed. Password required.'));
-
+  console.log('in password hash');
   return bcrypt.hash(password, 10)
     .then(hash => this.password = hash)
     .then(() => this)
@@ -44,6 +44,7 @@ userModel.methods.comparePasswordHash = function(password) {
 // generates the token seed to create user tokens
 userModel.methods.generateTokenSeed = function() {
   this.tokenSeed = crypto.randomBytes(64).toString('hex');
+  console.log('this token seed', this.tokenSeed);
   return this.save()
     .then(() => Promise.resolve(this.tokenSeed))
     .catch(console.error);

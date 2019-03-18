@@ -10,6 +10,7 @@ const createNotifications = require('../lib/create-notifications');
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
+    console.log('in signup route');
     let pw = req.body.password;
     delete req.body.password;
     let profileImage = req.body.picture;
@@ -42,12 +43,13 @@ module.exports = function(router) {
     }
 
     if(!profileImage) {
+      console.log('in user signup no profile pic');
       user.picture = 'https://img.icons8.com/android/100/000000/user.png';
       return user.generatePasswordHash(pw)
         .then(newUser => newUser.save())
         .then(userRes => req.user = userRes)
         .then(userRes => {
-          createNotifications(userRes.email, userRes);
+          createNotifications(userRes);
           return userRes;
         })
         .then(userRes => userRes.generateToken())
