@@ -27,6 +27,10 @@ module.exports = function(router) {
           return user.generatePasswordHash(pw)
             .then(newUser => newUser.save())
             .then(userRes => req.user = userRes)
+            .then(userRes => {
+              createNotifications(userRes);
+              return userRes;
+            })
             .then(userRes => userRes.generateToken())
             .then(token => {
               // console.log('hello ______________________');
