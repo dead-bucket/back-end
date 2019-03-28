@@ -14,10 +14,10 @@ module.exports = router => {
       // this will retuyrn an array of objects that match the target 
       let allEntries = {};
       if(req.body.recipient) {
-        return Entry.find({userId: req.user.id, recipient: req.body.recipient})
+        return Entry.find({userId: req.user.id, recipient: req.body.recipient}).sort({date: -1})
           .then(userEntries => allEntries.userEntries = userEntries)
           .then(() => {
-            return Entry.find({userId: req.body.recipient, recipient: req.user.id})
+            return Entry.find({userId: req.body.recipient, recipient: req.user.id});
               
           })
           .then(recipientEntries => allEntries.recipientEntries = recipientEntries)
