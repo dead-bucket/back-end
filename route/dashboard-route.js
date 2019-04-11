@@ -82,8 +82,11 @@ module.exports = router => {
       .then(entries => {
         dashboardObject = entries;
       })
+      // .then(() => {
+      //   return User.find({friends: { '$in' : [`${req.user._id}`]}});
+      // })
       .then(() => {
-        return User.find({friends: { '$in' : [`${req.user._id}`]}});
+        return User.find({_id: { '$in' : req.user.friends}});
       })
       .then(userEntries => {
         returnObject = dashboardObject.concat(userEntries);
