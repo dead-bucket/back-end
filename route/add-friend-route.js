@@ -3,6 +3,7 @@
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const User = require('../model/userModel');
+const Notification = require('../model/notifications');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 
 
@@ -31,24 +32,33 @@ module.exports = router => {
         }
       })
       .then(user => {
-        if(req.body.friend){
-          User.findById(req.body.friend)
-            .then(x => {
-              console.log('friend found', user._id);
+        let tempNotification = new Notification();
+        tempNotification.userId = req.body.friend;
+        tempNotification.fromId = user._id;
+        tempNotification.type = 'Friend Request';
+        tempNotification.save();
+        console.log('new friend notification', tempNotification);
 
-              if(!x.friends.includes(`${user._id}`)) {
-                let z = JSON.stringify(user._id);
-                x.friends.push(JSON.parse(z));
-                x.save();
-                return;
-              } else {
-                return;
-              }
-            });
-        } else {
-          Promise.reject(new Error('Authorization Failed. No friend specified'));
-        }
       })
+      // .then(user => {
+      //   if(req.body.friend){
+      //     User.findById(req.body.friend)
+      //       .then(x => {
+      //         console.log('friend found', user._id);
+
+      //         if(!x.friends.includes(`${user._id}`)) {
+      //           let z = JSON.stringify(user._id);
+      //           x.friends.push(JSON.parse(z));
+      //           x.save();
+      //           return;
+      //         } else {
+      //           return;
+      //         }
+      //       });
+      //   } else {
+      //     Promise.reject(new Error('Authorization Failed. No friend specified'));
+      //   }
+      // })
       .then(() => {
         res.sendStatus(204);
 

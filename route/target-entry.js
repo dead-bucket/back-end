@@ -14,13 +14,13 @@ module.exports = router => {
       // this will retuyrn an array of objects that match the target 
       let allEntries = {};
       if(req.body.recipient) {
-        return Entry.find({userId: req.user.id, recipient: req.body.recipient}).sort({date: -1})
+        return Entry.find({userId: req.user.id, recipient: req.body.recipient}).sort({createdAt: -1})
           .then(userEntries => allEntries.userEntries = userEntries)
-          .then(() => {
-            return Entry.find({userId: req.body.recipient, recipient: req.user.id});
+          // .then(() => {
+          //   return Entry.find({userId: req.body.recipient, recipient: req.user.id}).sort({date: -1});
               
-          })
-          .then(recipientEntries => allEntries.recipientEntries = recipientEntries)
+          // })
+          // .then(recipientEntries => allEntries.recipientEntries = recipientEntries)
           .then(() => {
             res.status(200).json(allEntries);
           })
