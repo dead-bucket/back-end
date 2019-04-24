@@ -17,6 +17,7 @@ module.exports = router => {
           userId: req.query.sender,
           recipient: req.user.id,
           delivered: true,
+          deliverOn: {'$lte': Date.now()},
         }).sort({date: -1})
         // .then(results => {
 
