@@ -17,7 +17,7 @@ module.exports = router => {
           userId: req.query.sender,
           recipient: req.user.id,
           delivered: true,
-        }).sort({date: -1})
+        }).sort({createdAt: -1})
         // .then(results => {
 
           //   if(req.user.newmessages.includes(req.params.sender)) {
