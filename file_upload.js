@@ -15,6 +15,7 @@ module.exports = (picture, id) => {
     Body: buf,
     ContentEncoding: 'base64',
     ContentType: 'image/jpeg',
+    CacheControl: 'no-cache',
   };
 
   return new Promise ((resolve, reject) => {

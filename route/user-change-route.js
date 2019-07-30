@@ -4,6 +4,7 @@ const User = require('../model/userModel');
 const errorHandler = require('../lib/error-handler');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 const bodyParser = require('body-parser').json();
+const uploadPic = require('../file_upload');
 
 module.exports = function(router) {
   router.route('/user')
@@ -27,25 +28,55 @@ module.exports = function(router) {
     })
     .put(bearerAuth, bodyParser, (req, res) => {
 
-      User.findOne(req.user._id)
-        .then(user => {
-          // console.log('request', req.body.sortby);
-          if(user) {
-            user.username = req.body.username ? req.body.username : user.username;
-            user.firstname = req.body.firstname ? req.body.firstname : user.firstname;
-            user.lastname = req.body.lastname ? req.body.lastname : user.lastname;
-            user.email = req.body.email ? req.body.email : user.email;
-            user.picture = req.body.picture ? req.body.picture : user.picture;
-            user.phoneNumber = req.body.phoneNumber ? req.body.phoneNumber : user.phoneNumber;
-            user.sortby = req.body.sortby ? req.body.sortby : user.sortby;
+      if(req.body.image) {
+        console.log('in profile pic update');
+        return uploadPic(req.body.image, req.user._id)
+          .then(data => {
+            console.log('image uploaded', data.Location);
+            User.findOne(req.user._id)
+              .then(user => {
+                // console.log('request', req.body.sortby);
+                if(user) {
+                  user.username = req.body.username ? req.body.username : user.username;
+                  user.firstname = req.body.firstname ? req.body.firstname : user.firstname;
+                  user.lastname = req.body.lastname ? req.body.lastname : user.lastname;
+                  user.email = req.body.email ? req.body.email : user.email;
+                  user.picture = data.Location;
+                  user.phoneNumber = req.body.phoneNumber ? req.body.phoneNumber : user.phoneNumber;
+                  user.sortby = req.body.sortby ? req.body.sortby : user.sortby;
+                    
+                } else {
+                  Promise.reject(new Error('Authorization Failed. No user found'));
+                }
+                return user.save();
+              })
+              .then(() => res.sendStatus(204))
+              .catch(err => errorHandler(err, res));
+          });
+      }
+      else {
+        User.findOne(req.user._id)
+          .then(user => {
+            // console.log('request', req.body.sortby);
             
-          } else {
-            Promise.reject(new Error('Authorization Failed. No user found'));
-          }
-          return user.save();
-        })
-        .then(() => res.sendStatus(204))
-        .catch(err => errorHandler(err, res));
+            if(user) {
+              user.username = req.body.username ? req.body.username : user.username;
+              user.firstname = req.body.firstname ? req.body.firstname : user.firstname;
+              user.lastname = req.body.lastname ? req.body.lastname : user.lastname;
+              user.email = req.body.email ? req.body.email : user.email;
+              user.phoneNumber = req.body.phoneNumber ? req.body.phoneNumber : user.phoneNumber;
+              user.sortby = req.body.sortby ? req.body.sortby : user.sortby;
+              
+            } else {
+              Promise.reject(new Error('Authorization Failed. No user found'));
+            }
+            return user.save();
+          })
+          .then(() => res.sendStatus(204))
+          .catch(err => errorHandler(err, res));
+
+      }
+
     });
 };
 
