@@ -32,7 +32,7 @@ module.exports = function(router) {
         console.log('in profile pic update');
         return uploadPic(req.body.image, req.user._id)
           .then(data => {
-            console.log('image uploaded', data.Location);
+            console.log('image data from aws s3', data);
             User.findOne(req.user._id)
               .then(user => {
                 // console.log('request', req.body.sortby);
