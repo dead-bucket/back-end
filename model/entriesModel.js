@@ -9,7 +9,7 @@ const Entry = mongoose.Schema({
   description: {type: String, required: false },
   delivered: { type: Boolean, default: false },
   read: { type: Boolean, default: false}, 
-  deliverOn: {type: Date, required: false},
+  deliverOn: { type: Date, required: false},
 }, {timestamps: true});
 
 

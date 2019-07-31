@@ -11,6 +11,7 @@ module.exports = router => {
     .post(bearerAuth, bodyParser, (req, res) => {
       // console.log('in entries route post!!');
       req.body.userId = req.user._id;
+      // console.log('date from entry created', req.body.deliverOn);
       return new Entry(req.body).save()
         .then(createdEntry => res.status(201).json(createdEntry))
         .catch(err => errorHandler(err, res));
