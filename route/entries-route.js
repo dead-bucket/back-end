@@ -45,12 +45,19 @@ module.exports = router => {
       if(!req.params.id) {
         return errorHandler(new Error('validation failed, no entry id specified'), res);
       }
-
+      console.log('in put ', req.body.deliverOn);
       Entry.findById(req.params.id)
         .then(entry => {
           if(!entry) return Promise.reject(new Error('Authorization error'));
-          return entry.set(req.body).save();        
+          entry.deliverOn = req.body.deliverOn ? new Date(req.body.deliverOn) : entry.deliverOn;
+          entry.recipient = req.body.recipient ? req.body.recipient : entry.recipient;
+          entry.mood = req.body.mood ? req.body.mood : entry.mood;
+          entry.description = req.body.description ? req.body.description : entry.description;
+          entry.read = req.body.read ? req.body.read : entry.read;
+          // console.log('entry.deliverOn', entry.deliverOn);
+          return entry.save();        
         })
+        // .then(data => console.log('data after set', data))
         .then(() => res.sendStatus(204))
         .catch(err => errorHandler(err, res));
     })
