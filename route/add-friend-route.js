@@ -37,7 +37,7 @@ module.exports = router => {
         tempNotification.fromId = user._id;
         tempNotification.type = 'Friend Request';
         tempNotification.save();
-        console.log('new friend notification', tempNotification);
+        // console.log('new friend notification', tempNotification);
 
       })
       // .then(user => {

@@ -3,30 +3,26 @@
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const Entry = require('../model/entriesModel');
+const User = require('../model/userModel');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 
 
 module.exports = router => {
   router.route('/entry/:id?')
     .post(bearerAuth, bodyParser, (req, res) => {
-      // console.log('in entries route post!!');
       req.body.userId = req.user._id;
       if(!req.body.deliverOn) {
         req.body.deliverOn = Date.now();
       }
-      // console.log('date from entry created', req.body.deliverOn);
       return new Entry(req.body).save()
         .then(createdEntry => res.status(201).json(createdEntry))
         .catch(err => errorHandler(err, res));
     })
   // this is working
     .get(bearerAuth, (req, res) => {
-      // console.log('in get route entries', req.query.id);
       if(req.params.id) {
-        // console.log('in find one GET route');
         return Entry.findById(req.params.id)
           .then(entry => {
-            // console.log('in get one entry', entry);
             res.status(200).json(entry);
 
           })
@@ -48,10 +44,8 @@ module.exports = router => {
       if(!req.params.id) {
         return errorHandler(new Error('validation failed, no entry id specified'), res);
       }
-      // console.log('in put ', req.params.id, req.body.deliverOn, req.body.delivered);
       Entry.findById(req.params.id)
         .then(entry => {
-          // console.log('in entry put request', entry);
           if(!entry) return Promise.reject(new Error('Authorization error'));
           entry.deliverOn = req.body.deliverOn ? new Date(req.body.deliverOn) : entry.deliverOn;
           entry.recipient = req.body.recipient ? req.body.recipient : entry.recipient;
@@ -59,10 +53,21 @@ module.exports = router => {
           entry.description = req.body.description ? req.body.description : entry.description;
           entry.read = req.body.read ? req.body.read : entry.read;
           entry.delivered = req.body.delivered ? req.body.delivered : entry.delivered;
-          // console.log('entry after put', entry);
           return entry.save();        
         })
-        // .then(data => console.log('data after set', data))
+        .then(deliveredEntry => {
+          if(req.body.delivered) {
+            User.findById(deliveredEntry.recipient)
+              .then(user => {
+                user.newmessages.push(`${req.user.id}`);
+                return user.save();
+
+              });
+            return;
+          } else {
+            return;
+          }
+        })
         .then(() => res.sendStatus(204))
         .catch(err => errorHandler(err, res));
     })
