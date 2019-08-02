@@ -17,7 +17,7 @@ module.exports = router => {
         return Entry.find({userId: req.user.id, recipient: req.body.recipient}).sort({createdAt: -1})
           .then(userEntries => {
             allEntries.userEntries = userEntries;
-            console.log('All entries for thoughtline', allEntries.userEntries);
+            // console.log('All entries for thoughtline', allEntries.userEntries);
           })
           // .then(() => {
           //   return Entry.find({userId: req.body.recipient, recipient: req.user.id}).sort({date: -1});
