@@ -48,7 +48,7 @@ module.exports = function(router) {
 
     if(!profileImage) {
       console.log('in user signup no profile pic');
-      user.picture = 'https://img.icons8.com/android/100/000000/user.png';
+      user.picture = 'https://png.pngtree.com/svg/20160319/49805b8c9c.svg';
       return user.generatePasswordHash(pw)
         .then(newUser => newUser.save())
         .then(userRes => req.user = userRes)
