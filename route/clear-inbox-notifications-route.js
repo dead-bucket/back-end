@@ -23,17 +23,17 @@ module.exports = router => {
               return;
             })
             .then(() => {
-              Entry.updateMany({
+              return Entry.updateMany({
                 userId: req.body.sender,
                 recipient: req.user.id,
                 delivered: true,
                 read: false,
                 deliverOn: {'$lte': Date.now()},
               }, {read: true});
-              // .then(results => {
-              //   // console.log('results of entryfind in inboxclearnotifications', results);
-              //   return;
-              // });
+                // .then(results => {
+                //   // console.log('results of entryfind in inboxclearnotifications', results);
+                //   return;
+                // });
                 
             })
             .then(() => {
