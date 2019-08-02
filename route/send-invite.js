@@ -16,12 +16,8 @@ module.exports = router => {
     .route('/sendinvite/')
 
     .post(bearerAuth, bodyParser, (req, res) => {
-      console.log('send invite email request body', req.body.email);
-      console.log('___________________________');
-      console.log('user sending request', req.user.pendingRequest);
-      if(req.user.pendingRequest.includes(`${req.body.sendEmail}`)) {
-        console.log('that email is already a friend');
-        res.sendStatus(204);
+      if(req.user.pendingRequest.includes(req.body.email)) {
+        res.sendStatus(209);
         
       } else {
         if (req.body.email) {
@@ -34,7 +30,7 @@ module.exports = router => {
           }
           return sendEmail(req)
             .then(data => {
-              console.log('data back from send nodemailer', data);
+              // console.log('data back from send nodemailer', data);
               User.findById(req.user._id)
                 .then(user => {
                   if (!user.pendingRequest.includes(`${req.body.email}`)) {
