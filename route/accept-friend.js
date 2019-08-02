@@ -10,7 +10,7 @@ const Notifications = require('../model/notifications');
 module.exports = router => {
   
   router.put('/acceptfriend/', bearerAuth, bodyParser, (req, res) => {
-    console.log('in accept frind route', req.body);
+    // console.log('in accept frind route', req.body);
       
     User.findOne(req.user._id)
       
@@ -18,10 +18,10 @@ module.exports = router => {
         if(req.body.friend){
           
             
-          console.log('user found', user);
-          console.log('req body friend', req.body.friend);
+          // console.log('user found', user);
+          // console.log('req body friend', req.body.friend);
           if(!user.friends.includes(req.body.friend)) {
-            console.log('adding friend');
+            // console.log('adding friend');
             // let z = JSON.stringify(req.body.friend);
             user.friends.push(req.body.friend);
             user.save();

@@ -18,21 +18,7 @@ module.exports = router => {
           recipient: req.user.id,
           delivered: true,
           deliverOn: {'$lte': Date.now()},
-          }).sort({createdAt: -1})
-
-        // .then(results => {
-
-          //   if(req.user.newmessages.includes(req.params.sender)) {
-          //     User.findOne({_id: req.user.id})
-          //       .then(user => {
-          //         let temp = user.newmessages.filter(el => el !== req.params.sender);
-          //         user.newmessages = temp;
-          //         user.save();
-          //       });
-          //   }
-          //   return results;
-          //   // res.status(200).json(results);
-          // })
+        }).sort({createdAt: -1})
           .then(results => res.status(200).json(results))
           .catch(err => errorHandler(err, res))
       );

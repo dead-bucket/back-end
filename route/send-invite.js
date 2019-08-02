@@ -16,35 +16,44 @@ module.exports = router => {
     .route('/sendinvite/')
 
     .post(bearerAuth, bodyParser, (req, res) => {
-      console.log('send invite email', req.body.email);
-      if (req.body.email) {
-        if (!validateEmail(req.body.email))
+      if(req.user.pendingRequest.includes(req.body.email)) {
+        res.sendStatus(209);
+        
+      } else {
+        if (req.body.email) {
+          if (!validateEmail(req.body.email)) {
+            return errorHandler(
+              new Error('validation failed, not a valid email format'),
+              res
+            );
+
+          }
+          return sendEmail(req)
+            .then(data => {
+              // console.log('data back from send nodemailer', data);
+              User.findById(req.user._id)
+                .then(user => {
+                  if (!user.pendingRequest.includes(`${req.body.email}`)) {
+                    user.pendingRequest.push(req.body.email);
+                    user.save();
+                  }
+                })
+                .catch(err => errorHandler(err, res));
+              return data;
+            })
+            .then(data => {
+              // console.log('data back from send email', data.accepted[0]);
+              res.status(200).json(data);
+            })
+            // .catch(err => errorHandler(err, res));
+            .catch(err => console.log(err));
+        }
+        if (!req.body.email)
           return errorHandler(
-            new Error('validation failed, not a valid email format'),
+            new Error('validation failed, no email specified'),
             res
           );
-        return sendEmail(req)
-          .then(data => {
-            User.findById(req.user._id)
-              .then(user => {
-                if (!user.pendingRequest.includes(`${req.body.email}`)) {
-                  user.pendingRequest.push(req.body.email);
-                  user.save();
-                }
-              })
-              .catch(err => errorHandler(err, res));
-            return data;
-          })
-          .then(data => {
-            console.log('data back from send email', data.accepted[0]);
-            res.status(200).json(data);
-          })
-          .catch(err => errorHandler(err, res));
       }
-      if (!req.body.email)
-        return errorHandler(
-          new Error('validation failed, no email specified'),
-          res
-        );
+        
     });
 };
