@@ -3,6 +3,7 @@
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
 const User = require('../model/userModel');
+const Target = require('../model/targetModel');
 // const Notification = require('../model/notifications');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 
@@ -12,12 +13,10 @@ module.exports = router => {
   
   router.put('/deletefriend/', bearerAuth, bodyParser, (req, res) => {
   
-      
-    User.findOne(req.user._id)
-      .then(user => {
-        if(user) {
-          
-          if(user.friends.includes(req.body.friend)) {
+    if(req.user.friends.includes(req.body.friend)) {
+      User.findOne(req.user._id)
+        .then(user => {
+          if(user) {
             let newFriendsArray, newPriorityArray = [];
             newFriendsArray = user.friends.filter(el => el !== req.body.friend);
             newPriorityArray = user.priority.filter(friend => friend !== req.body.friend);
@@ -26,17 +25,38 @@ module.exports = router => {
             user.save();
             return user;
           } else {
-            return user;
+            Promise.reject(new Error('Authorization Failed. No user found'));
           }
-        } else {
-          Promise.reject(new Error('Authorization Failed. No user found'));
-        }
-      })
-      .then(() => {
-        res.sendStatus(204);
-      })
-      .catch(err => errorHandler(err, res));
         
-  });
+        })
+        .then(() => {
+          // console.log('user found and removed from array');
+          res.sendStatus(204);
+        })
+        .catch(err => errorHandler(err, res));
+        
+    } else {
+      Target.findById(req.body.friend)
+        .then(data => {
+          // console.log('data from delete one', data); 
+          return data.remove();
+          
+        })
+        .then(() => {
+          if(req.user.priority.includes(req.body.friend)) {
+            User.findById(req.user._id)
+              .then(user => {
+                let newPriorityArray = user.priority.filter(friend => friend !== req.body.friend);
+                user.priority = newPriorityArray;
+                return user.save();
+              });
+          }
+        })
+        .then(() => {
+          res.sendStatus(204);
+        })
+        .catch(err => errorHandler(err, res));
+    }
 
+  });
 };
