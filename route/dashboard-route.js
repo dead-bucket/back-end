@@ -23,6 +23,7 @@ module.exports = router => {
       firstname: userObject.firstname ? userObject.firstname : '',
       lastname: userObject.lastname ? userObject.lastname : '',
       priority: false,
+      isTarget: userObject.isTarget ? userObject.isTarget : false,
     }
     
     return newObject;
@@ -76,20 +77,22 @@ module.exports = router => {
 
 
   router.get('/dashboard/', bodyParser, bearerAuth, (req, res) => {
-    let dashboardObject,returnObject = [];
+    let returnObject = [];
+    let dashboardObject;
     // console.log('req.user', req.user);
-    return Target.find({userId: req.user._id})
+    return Target.find({userId: req.user._id}).lean()
       .then(entries => {
-        dashboardObject = entries;
+        dashboardObject = entries.map(entry => {
+          entry.isTarget = true;
+          return entry;
+        });
       })
-      // .then(() => {
-      //   return User.find({friends: { '$in' : [`${req.user._id}`]}});
-      // })
       .then(() => {
-        return User.find({_id: { '$in' : req.user.friends}});
+        return User.find({_id: { '$in' : req.user.friends}}).lean();
       })
       .then(userEntries => {
         returnObject = dashboardObject.concat(userEntries);
+        console.log('return object', returnObject);
         return returnObject;
       })
       .then(array => {
@@ -108,7 +111,7 @@ module.exports = router => {
       //   return array;
       // })
       .then(testArray => {
-        
+        console.log('test array before sending', testArray);
         res.status(200).json(testArray);
       })
       .catch(err => errorHandler(err, res));
