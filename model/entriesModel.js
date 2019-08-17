@@ -10,6 +10,7 @@ const Entry = mongoose.Schema({
   delivered: { type: Boolean, default: false },
   read: { type: Boolean, default: false}, 
   deliverOn: { type: Date, required: false},
+  image: {type: String, required: false},
 }, {timestamps: true});
 
 
