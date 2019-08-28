@@ -1,6 +1,6 @@
 'use strict';
 
-const bodyParser = require('body-parser').json();
+const bodyParser = require('body-parser').json({limit: '50mb'});
 const errorHandler = require('../lib/error-handler');
 const Entry = require('../model/entriesModel');
 const User = require('../model/userModel');
@@ -12,19 +12,24 @@ module.exports = router => {
   router.route('/entry/:id?')
     .post(bearerAuth, bodyParser, (req, res) => {
       req.body.userId = req.user._id;
-      let entryToCreate = new Entry(req);
-      console.log("________________");
-      console.log('test entry', req.body);
+
+      let entryToCreate = new Entry(req.body);
+      // console.log("________________");    
+      // console.log('test entry', req.body.recipient);
       if(!req.body.deliverOn) {
         req.body.deliverOn = Date.now();
       }
       //this is if there is a image included in request
       if(req.body.image) {
+        // console.log('the req has image');
         return FileUpload(req.body.image, entryToCreate._id)
           .then(data => {
             entryToCreate.image = data.Location;
+            // console.log('data from file upload', data.Location);
+            return;
           })
           .then(() => {
+            // console.log('entry to save', entryToCreate);
             return entryToCreate.save();
           })
           .then(createdEntry => res.status(201).json(createdEntry))
