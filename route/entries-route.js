@@ -12,8 +12,9 @@ module.exports = router => {
   router.route('/entry/:id?')
     .post(bearerAuth, bodyParser, (req, res) => {
       req.body.userId = req.user._id;
-      let entryToCreate = new Entry(req.body);
-      console.log('test entry', entryToCreate);
+      let entryToCreate = new Entry(req);
+      console.log("________________");
+      console.log('test entry', req.body);
       if(!req.body.deliverOn) {
         req.body.deliverOn = Date.now();
       }
