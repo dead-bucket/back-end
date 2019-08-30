@@ -14,7 +14,7 @@ module.exports = router => {
       if(!req.body.recipient) {
         return errorHandler(new Error('validation failed, no recipient id specified'), res);
       }
-      console.log('user info', req.user.id , req.body.recipient);
+      // console.log('user info', req.user.id , req.body.recipient);
       Entry.updateMany({userId: req.user.id, recipient: req.body.recipient, deliverOn: {'$lte': Date.now()}, delivered: false}, {delivered: true})
         .then(results => {
           // console.log('results', results.nModified);
@@ -24,7 +24,7 @@ module.exports = router => {
         .then(results => {
           //this finds the recipient of the messages and pushes the
           //senders id into the reciepients new message array 
-          console.log('results of update many in .then', results);
+          // console.log('results of update many in .then', results);
           if(results.nModified > 0) {
             return User.find({_id: req.body.recipient})
               .then(user => {

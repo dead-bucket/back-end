@@ -17,7 +17,8 @@ module.exports = router => {
       // console.log("________________");    
       // console.log('test entry', req.body.recipient);
       if(!req.body.deliverOn) {
-        req.body.deliverOn = Date.now();
+        console.log('in set deliverOn', req.body.deliverOn);
+        entryToCreate.deliverOn = Date.now();
       }
       //this is if there is a image included in request
       if(req.body.image) {
@@ -36,6 +37,7 @@ module.exports = router => {
           .catch(err => errorHandler(err, res));
       } else {
         return entryToCreate.save()
+          .then(createdEntry => {console.log('entry created', createdEntry);})
           .then(createdEntry => res.status(201).json(createdEntry))
           .catch(err => errorHandler(err, res));
 
