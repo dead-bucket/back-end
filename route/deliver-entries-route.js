@@ -24,7 +24,7 @@ module.exports = router => {
         .then(results => {
           //this finds the recipient of the messages and pushes the
           //senders id into the reciepients new message array 
-          // console.log('results of update many in .then', results);
+          console.log('results of update many in .then', results);
           if(results.nModified > 0) {
             return User.find({_id: req.body.recipient})
               .then(user => {
