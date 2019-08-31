@@ -55,5 +55,30 @@ module.exports = router => {
       
 
     });
-  
+  router.route('/acceptnewpassword/')
+    .put(bodyParser, (req, res) =>{
+      passwordToken.find({email: req.body.email, token: req.body.token})
+        .then(result => {
+          console.log('result from search', result);
+          if(result.length > 0) {
+            return result[0].remove()
+              .then(() => {
+                User.findOne({email: req.body.email})
+                  .then(result => {
+                    return result.generatePasswordHash(req.body.password);
+                  })
+                  .then(user => {
+                    return user.save();
+                  })
+                  .then(() => {
+                    res.sendStatus(204);
+                  });
+
+              });
+          } else {
+            res.sendStatus(404);
+          }
+        })
+        .catch(err => errorHandler(err, res));
+    });
 };
