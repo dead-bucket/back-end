@@ -56,8 +56,22 @@ module.exports = router => {
 
     });
   router.route('/acceptnewpassword/')
+    .post(bodyParser, (req, res) => {
+      console.log('req', req.body.email);
+      passwordToken.find({email: req.body.email, token: req.body.token,  createdAt: { $gt: new Date(Date.now() - 24*60*59 * 1000) } })
+        .then(result => {
+          console.log('result get', result);
+          if(result.length > 0) {
+            res.sendStatus(201);
+          }
+          if(result.length === 0 ) {
+            res.sendStatus(404);
+          }
+        })
+        .catch(err => errorHandler(err, res));
+    })
     .put(bodyParser, (req, res) =>{
-      passwordToken.find({email: req.body.email, token: req.body.token})
+      passwordToken.find({email: req.body.email, token: req.body.token,  createdAt: { $gt: new Date(Date.now() - 24*60*59 * 1000) } })
         .then(result => {
           console.log('result from search', result);
           if(result.length > 0) {
@@ -81,4 +95,5 @@ module.exports = router => {
         })
         .catch(err => errorHandler(err, res));
     });
+   
 };
