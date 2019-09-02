@@ -14,8 +14,9 @@ module.exports = router => {
       if(!req.body.recipient) {
         return errorHandler(new Error('validation failed, no recipient id specified'), res);
       }
-      // console.log('user info', req.user.id , req.body.recipient);
-      Entry.updateMany({userId: req.user.id, recipient: req.body.recipient, deliverOn: {'$lte': Date.now()}, delivered: false}, {delivered: true})
+      
+      // console.log('user info', req.user.id , req.body.recipient);deliverOn: {'$lte': Date.now()},
+      Entry.updateMany({userId: req.user.id, recipient: req.body.recipient,  delivered: false}, {delivered: true})
         .then(results => {
           // console.log('results', results.nModified);
           if(!results) return Promise.reject(new Error('Authorization error'));
