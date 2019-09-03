@@ -25,12 +25,5 @@ module.exports = router => {
         .then(beta => res.status(201).json(beta))
         .catch(err => errorHandler(err, res));
     });
-  router.route('/betamany/')
-    .post(bodyParser, (req, res) => {
-      console.log('array', req.body.array);
-      Beta.collection.insertMany(req.body.array, (err, docs) => {
-        if(err) errorHandler(err, res);
-        console.log('docs inserted', docs.length);
-      });
-    });
+  
 };
