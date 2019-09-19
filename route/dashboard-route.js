@@ -92,7 +92,7 @@ module.exports = router => {
       })
       .then(userEntries => {
         returnObject = dashboardObject.concat(userEntries);
-        console.log('return object', returnObject);
+        // console.log('return object', returnObject);
         return returnObject;
       })
       .then(array => {
@@ -111,7 +111,7 @@ module.exports = router => {
       //   return array;
       // })
       .then(testArray => {
-        console.log('test array before sending', testArray);
+        // console.log('test array before sending', testArray);
         res.status(200).json(testArray);
       })
       .catch(err => errorHandler(err, res));
