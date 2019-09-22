@@ -15,6 +15,7 @@ const userModel = mongoose.Schema({
   phoneNumber : { type: String, required: false},
   lastLogin: { type: Date, default: Date.now()},
   sortby: { type: String, required: false, default:'alpha'},
+  loginarray: [{type: Date, required: false}],
   priority: [],
   friends: [],
   notifications:[],
@@ -57,6 +58,7 @@ userModel.methods.generateToken = function() {
 };
 userModel.methods.updateLogin = function () {
   this.lastLogin = Date.now();
+  this.loginarray.push(Date.now());
   return this.save()
     .then(() => Promise.resolve(this))
     .catch(console.error);
