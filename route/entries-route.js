@@ -6,6 +6,8 @@ const Entry = require('../model/entriesModel');
 const User = require('../model/userModel');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 const FileUpload = require('../file_upload');
+const AWSFileDelete = require('../lib/delete-image-aws');
+const AWSFileSize = require('../lib/aws-get-image-size');
 
 
 module.exports = router => {
@@ -22,21 +24,23 @@ module.exports = router => {
       if(req.body.image) {
         return FileUpload(req.body.image, entryToCreate._id)
           .then(data => {
-            entryToCreate.image = data.Location;
-            console.log('data from file upload', data.fileSize);
+            entryToCreate.image = data.data.Location;
+            // console.log('data from file upload', data.fileSize);
             User.findById(req.body.userId) 
               .then(user => {
-                console.log('find user in storage size', user);
+                // console.log('find user in storage size', user);
                 let storageSize = user.storageSize + data.fileSize;
                 user.storageSize = storageSize;
-                console.log('after added storage', user.storageSize);
+                // console.log('after added storage', user.storageSize);
                 user.save();
                 
               });
+            entryToCreate.imageSize = data.fileSize;
+            console.log('image size in create entry', entryToCreate.imageSize);
             return;
           })
           .then(() => {
-            // console.log('entry to save', entryToCreate);
+            console.log('entry to save', entryToCreate);
             return entryToCreate.save();
           })
           .then(createdEntry => res.status(201).json(createdEntry))
@@ -111,8 +115,25 @@ module.exports = router => {
 
       return Entry.findById(req.params.id)
         .then(entry => {
-          if(entry) return entry.remove();
-          Promise.reject(new Error('objectid failed'));
+          if (!entry) {Promise.reject(new Error('objectid failed'));}
+          if(entry) {
+            let temp = entry;
+            entry.remove();
+            return temp;
+            
+          }
+        })
+        .then(temp => {
+          User.findById(temp.userId)
+            .then(user => {
+              console.log('user storage size before', user.storageSize);
+              user.storageSize = user.storageSize - temp.imageSize;
+              console.log('user storage size after', user.storageSize);
+              return user.save();
+            })
+            .then(() => {
+              return AWSFileDelete(temp._id);
+            });
         })
         .then(() => res.sendStatus(204))
         .catch(err => errorHandler(err, res));
