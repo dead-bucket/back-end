@@ -7,7 +7,6 @@ const User = require('../model/userModel');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 const FileUpload = require('../file_upload');
 const AWSFileDelete = require('../lib/delete-image-aws');
-const AWSFileSize = require('../lib/aws-get-image-size');
 
 
 module.exports = router => {
@@ -25,13 +24,10 @@ module.exports = router => {
         return FileUpload(req.body.image, entryToCreate._id)
           .then(data => {
             entryToCreate.image = data.data.Location;
-            // console.log('data from file upload', data.fileSize);
             User.findById(req.body.userId) 
               .then(user => {
-                // console.log('find user in storage size', user);
                 let storageSize = user.storageSize + data.fileSize;
                 user.storageSize = storageSize;
-                // console.log('after added storage', user.storageSize);
                 user.save();
                 
               });
@@ -67,8 +63,6 @@ module.exports = router => {
 
       return Entry.find({userId : req.user._id})
         .then(entry => {
-          // console.log('in get all entries');
-          // this makes no sense fix
           let entryIds = entry.map(ent => ent._id);
 
           res.status(200).json(entryIds);
