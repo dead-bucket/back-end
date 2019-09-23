@@ -21,6 +21,7 @@ const userModel = mongoose.Schema({
   notifications:[],
   newmessages: [],
   pendingRequest : [],
+  storageSize: {type: Number, required: false, default: 0},
 }, {timestamps: true});
 
 // This hashes the password and stores it in hashed form

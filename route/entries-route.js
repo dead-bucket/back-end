@@ -14,19 +14,25 @@ module.exports = router => {
       req.body.userId = req.user._id;
 
       let entryToCreate = new Entry(req.body);
-      // console.log("________________");    
-      // console.log('test entry', req.body.recipient);
+      
       if(!req.body.deliverOn) {
-        console.log('in set deliverOn', req.body.deliverOn);
         entryToCreate.deliverOn = Date.now();
       }
       //this is if there is a image included in request
       if(req.body.image) {
-        // console.log('the req has image');
         return FileUpload(req.body.image, entryToCreate._id)
           .then(data => {
             entryToCreate.image = data.Location;
-            // console.log('data from file upload', data.Location);
+            console.log('data from file upload', data.fileSize);
+            User.findById(req.body.userId) 
+              .then(user => {
+                console.log('find user in storage size', user);
+                let storageSize = user.storageSize + data.fileSize;
+                user.storageSize = storageSize;
+                console.log('after added storage', user.storageSize);
+                user.save();
+                
+              });
             return;
           })
           .then(() => {

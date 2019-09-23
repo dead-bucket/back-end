@@ -7,6 +7,7 @@ const basicAuth = require('../lib/basic-auth-middleware');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 const uploadPic = require('../file_upload');
 const createNotifications = require('../lib/create-notifications');
+const sendDocumentCount = require('../lib/send-email-generic');
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
@@ -15,6 +16,22 @@ module.exports = function(router) {
     delete req.body.password;
     let profileImage = req.body.picture;
     req.body.picture = null;
+    User.countDocuments({})
+      .then(data => {
+        if( data > 750) {
+          let emailInfo = {
+            email: 'roger.neil.davenport@gmail.com',
+            text: `You have reached ${data} users `,
+            subject: 'Thoughtline User Count',
+            title: 'No Of Users ',
+          };
+          sendDocumentCount(emailInfo);
+
+        } else {
+          return;
+        }
+
+      });
     let user = new User(req.body);
     if(profileImage) {
       return uploadPic(profileImage, user._id)
