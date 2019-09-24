@@ -36,8 +36,7 @@ module.exports = function(router) {
     if(profileImage) {
       return uploadPic(profileImage, user._id)
         .then(data => {
-          user.picture = data.Location;
-          // console.log('data back from upload', data);
+          user.picture = data.data.Location;
           return user;
         })
         .then(() => {
@@ -50,7 +49,6 @@ module.exports = function(router) {
             })
             .then(userRes => userRes.generateToken())
             .then(token => {
-              // console.log('hello ______________________');
               let blob = {};
               blob.user = req.user;
               blob.token = token;
@@ -64,7 +62,7 @@ module.exports = function(router) {
     }
 
     if(!profileImage) {
-      console.log('in user signup no profile pic');
+      // console.log('in user signup no profile pic');
       user.picture = 'https://png.pngtree.com/svg/20160319/49805b8c9c.svg';
       return user.generatePasswordHash(pw)
         .then(newUser => newUser.save())
@@ -75,7 +73,6 @@ module.exports = function(router) {
         })
         .then(userRes => userRes.generateToken())
         .then(token => {
-          // console.log('hello ______________________');
           let blob = {};
           blob.user = req.user;
           blob.token = token;
