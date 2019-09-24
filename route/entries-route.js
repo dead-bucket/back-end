@@ -6,6 +6,7 @@ const Entry = require('../model/entriesModel');
 const User = require('../model/userModel');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 const FileUpload = require('../file_upload');
+const AWSFileDelete = require('../lib/delete-image-aws');
 
 
 module.exports = router => {
@@ -14,23 +15,28 @@ module.exports = router => {
       req.body.userId = req.user._id;
 
       let entryToCreate = new Entry(req.body);
-      // console.log("________________");    
-      // console.log('test entry', req.body.recipient);
+      
       if(!req.body.deliverOn) {
-        console.log('in set deliverOn', req.body.deliverOn);
         entryToCreate.deliverOn = Date.now();
       }
       //this is if there is a image included in request
       if(req.body.image) {
-        // console.log('the req has image');
         return FileUpload(req.body.image, entryToCreate._id)
           .then(data => {
-            entryToCreate.image = data.Location;
-            // console.log('data from file upload', data.Location);
+            entryToCreate.image = data.data.Location;
+            User.findById(req.body.userId) 
+              .then(user => {
+                let storageSize = user.storageSize + data.fileSize;
+                user.storageSize = storageSize;
+                user.save();
+                
+              });
+            entryToCreate.imageSize = data.fileSize;
+            console.log('image size in create entry', entryToCreate.imageSize);
             return;
           })
           .then(() => {
-            // console.log('entry to save', entryToCreate);
+            console.log('entry to save', entryToCreate);
             return entryToCreate.save();
           })
           .then(createdEntry => res.status(201).json(createdEntry))
@@ -57,8 +63,6 @@ module.exports = router => {
 
       return Entry.find({userId : req.user._id})
         .then(entry => {
-          // console.log('in get all entries');
-          // this makes no sense fix
           let entryIds = entry.map(ent => ent._id);
 
           res.status(200).json(entryIds);
@@ -105,8 +109,25 @@ module.exports = router => {
 
       return Entry.findById(req.params.id)
         .then(entry => {
-          if(entry) return entry.remove();
-          Promise.reject(new Error('objectid failed'));
+          if (!entry) {Promise.reject(new Error('objectid failed'));}
+          if(entry) {
+            let temp = entry;
+            entry.remove();
+            return temp;
+            
+          }
+        })
+        .then(temp => {
+          User.findById(temp.userId)
+            .then(user => {
+              console.log('user storage size before', user.storageSize);
+              user.storageSize = user.storageSize - temp.imageSize;
+              console.log('user storage size after', user.storageSize);
+              return user.save();
+            })
+            .then(() => {
+              return AWSFileDelete(temp._id);
+            });
         })
         .then(() => res.sendStatus(204))
         .catch(err => errorHandler(err, res));

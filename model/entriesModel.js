@@ -11,6 +11,7 @@ const Entry = mongoose.Schema({
   read: { type: Boolean, default: false}, 
   deliverOn: { type: Date, required: false},
   image: {type: String, required: false},
+  imageSize: {type: Number, required: false},
 }, {timestamps: true});
 
 

@@ -3,6 +3,8 @@ const AWS = require('aws-sdk');
 module.exports = (picture, id) => {
   
   let buf = new Buffer(picture.replace(/^data:image\/\w+;base64,/, ''),'base64');
+  let fileSize = buf.toString().length;
+  console.log('buffer size in file upload', buf.toString().length);
   const s3 = new AWS.S3({
     accessKeyId: process.env.ACCESS_KEY,
     secretAccessKey: process.env.SECRET_ACCESS_KEY,
@@ -19,7 +21,7 @@ module.exports = (picture, id) => {
   };
 
   return new Promise ((resolve, reject) => {
-    s3.upload(params, (err, data) => err ? reject(err) : resolve(data));
+    s3.upload(params, (err, data) => err ? reject(err) : resolve({data, fileSize}));
   });
   
 

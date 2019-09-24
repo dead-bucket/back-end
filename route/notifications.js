@@ -25,14 +25,12 @@ module.exports = router => {
         .catch(err => errorHandler(err, res));
     })
     .delete(bearerAuth, (req, res) => {
-      // console.log('in delete notifications route');
       if(!req.params.id) {
         return errorHandler(new Error('validation failed, no entry id specified'), res);
       }
 
       return Notification.findById(req.params.id)
         .then(notification => {
-          // console.log('notification found', notification);
           if(notification) return notification.remove();
           Promise.reject(new Error('objectid failed'));
         })

@@ -7,6 +7,7 @@ const basicAuth = require('../lib/basic-auth-middleware');
 const bearerAuth = require('../lib/bearer-auth-middleware');
 const uploadPic = require('../file_upload');
 const createNotifications = require('../lib/create-notifications');
+const sendDocumentCount = require('../lib/send-email-generic');
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
@@ -15,12 +16,27 @@ module.exports = function(router) {
     delete req.body.password;
     let profileImage = req.body.picture;
     req.body.picture = null;
+    User.countDocuments({})
+      .then(data => {
+        if( data > 750) {
+          let emailInfo = {
+            email: 'roger.neil.davenport@gmail.com',
+            text: `You have reached ${data} users `,
+            subject: 'Thoughtline User Count',
+            title: 'No Of Users ',
+          };
+          sendDocumentCount(emailInfo);
+
+        } else {
+          return;
+        }
+
+      });
     let user = new User(req.body);
     if(profileImage) {
       return uploadPic(profileImage, user._id)
         .then(data => {
-          user.picture = data.Location;
-          // console.log('data back from upload', data);
+          user.picture = data.data.Location;
           return user;
         })
         .then(() => {
@@ -33,7 +49,6 @@ module.exports = function(router) {
             })
             .then(userRes => userRes.generateToken())
             .then(token => {
-              // console.log('hello ______________________');
               let blob = {};
               blob.user = req.user;
               blob.token = token;
@@ -47,7 +62,7 @@ module.exports = function(router) {
     }
 
     if(!profileImage) {
-      console.log('in user signup no profile pic');
+      // console.log('in user signup no profile pic');
       user.picture = 'https://png.pngtree.com/svg/20160319/49805b8c9c.svg';
       return user.generatePasswordHash(pw)
         .then(newUser => newUser.save())
@@ -58,7 +73,6 @@ module.exports = function(router) {
         })
         .then(userRes => userRes.generateToken())
         .then(token => {
-          // console.log('hello ______________________');
           let blob = {};
           blob.user = req.user;
           blob.token = token;
