@@ -13,23 +13,6 @@ function validateEmail(email) {
 
 
 module.exports = router => {
-  // function searchForUser (searchId) {
-  //   return new Promise(resolve => {
-  //     console.log('in find-user');
-  //     return User.find({email: `${searchId}`})
-  //       .then(data => {
-  //         if(data.length > 0) {
-  //           console.log('data', data);
-  //           resolve(data);
-  //         } else {
-  //           console.log('in else');
-  //           resolve('no user');
-  //         }
-  //       })
-  //       .catch(err => console.error(err));
-  
-  //   });
-  // }
 
   router.route('/usersearch/:email?')
     
@@ -37,7 +20,6 @@ module.exports = router => {
       
       if(req.query.email) {
         if(!validateEmail(req.query.email)) return errorHandler(new Error('validation failed, not a valid email format'), res);
-        // console.log('user search email', req.body.email);
         
         return User.find({email: req.query.email})
           .then(entry => {

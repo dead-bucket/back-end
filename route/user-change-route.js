@@ -14,10 +14,8 @@ module.exports = function(router) {
         .catch(err => errorHandler(err, res));
     })
     .delete(bearerAuth, (req, res) => {
-      // console.log('in delete', req.user._id);
       User.findById(req.user._id)
         .then(User => {
-          // console.log('in user remove', User);
           if(User) {
             return User.remove();
           }
@@ -29,13 +27,10 @@ module.exports = function(router) {
     .put(bearerAuth, bodyParser, (req, res) => {
 
       if(req.body.image) {
-        console.log('in profile pic update');
         return uploadPic(req.body.image, req.user._id)
           .then(data => {
-            console.log('image data from aws s3', data);
             User.findOne(req.user._id)
               .then(user => {
-                // console.log('request', req.body.sortby);
                 if(user) {
                   user.username = req.body.username ? req.body.username : user.username;
                   user.firstname = req.body.firstname ? req.body.firstname : user.firstname;
@@ -57,7 +52,6 @@ module.exports = function(router) {
       else {
         User.findOne(req.user._id)
           .then(user => {
-            // console.log('request', req.body.sortby);
             
             if(user) {
               user.username = req.body.username ? req.body.username : user.username;

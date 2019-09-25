@@ -30,7 +30,6 @@ module.exports = router => {
           }
           return sendEmail(req)
             .then(data => {
-              // console.log('data back from send nodemailer', data);
               User.findById(req.user._id)
                 .then(user => {
                   if (!user.pendingRequest.includes(`${req.body.email}`)) {
@@ -42,7 +41,6 @@ module.exports = router => {
               return data;
             })
             .then(data => {
-              // console.log('data back from send email', data.accepted[0]);
               res.status(200).json(data);
             })
             // .catch(err => errorHandler(err, res));

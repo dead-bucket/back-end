@@ -12,7 +12,6 @@ module.exports = router => {
       {picture: 'https://png.pngtree.com/svg/20160319/49805b8c9c.svg',
       })
         .then(data => {
-          console.log('data from change all');
           res.status(201).json(data);
         });
     });

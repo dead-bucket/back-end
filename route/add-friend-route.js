@@ -37,28 +37,8 @@ module.exports = router => {
         tempNotification.fromId = user._id;
         tempNotification.type = 'Friend Request';
         tempNotification.save();
-        // console.log('new friend notification', tempNotification);
 
       })
-      // .then(user => {
-      //   if(req.body.friend){
-      //     User.findById(req.body.friend)
-      //       .then(x => {
-      //         console.log('friend found', user._id);
-
-      //         if(!x.friends.includes(`${user._id}`)) {
-      //           let z = JSON.stringify(user._id);
-      //           x.friends.push(JSON.parse(z));
-      //           x.save();
-      //           return;
-      //         } else {
-      //           return;
-      //         }
-      //       });
-      //   } else {
-      //     Promise.reject(new Error('Authorization Failed. No friend specified'));
-      //   }
-      // })
       .then(() => {
         res.sendStatus(204);
 

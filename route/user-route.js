@@ -11,7 +11,6 @@ const sendDocumentCount = require('../lib/send-email-generic');
 
 module.exports = function(router) {
   router.post('/signup', bodyParser, (req, res) => {
-    console.log('in signup route');
     let pw = req.body.password;
     delete req.body.password;
     let profileImage = req.body.picture;
@@ -62,7 +61,6 @@ module.exports = function(router) {
     }
 
     if(!profileImage) {
-      // console.log('in user signup no profile pic');
       user.picture = 'https://png.pngtree.com/svg/20160319/49805b8c9c.svg';
       return user.generatePasswordHash(pw)
         .then(newUser => newUser.save())

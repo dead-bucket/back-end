@@ -34,16 +34,13 @@ module.exports = router => {
     return new Promise(resolve => {
       Entries.countDocuments({recipient: userObject._id})
         .then(count => {
-          // console.log('_______________________')
           let newObject = processObject(userObject);
           newObject.count = count;
           return newObject;
           
         })
         .then(object => {
-          // console.log('2nd _______________________', object);
           resolve (object);
-
         })
     });
   }
@@ -56,14 +53,12 @@ module.exports = router => {
       array.forEach(element => {
         returnArray.push(processObject(element));
       });
-      // console.log('in alpha sort return array', returnArray);
       returnArray.sort(function(a, b){
         if(a.lastname.toLowerCase() < b.lastname.toLowerCase()) { return -1; }
         if(a.lastname.toLowerCase() > b.lastname.toLowerCase()) { return 1; }
         return 0;
       })
     } else {
-      // console.log('in count sort')
       
       for (let i = 0; i < tempArray.length; i++) {
         let temp = await countPromise(tempArray[i])
@@ -71,7 +66,6 @@ module.exports = router => {
       }
       returnArray.sort(function(a,b) {return (b.count - a.count)});
     }
-    // console.log('return array from sort', returnArray);
     return returnArray;
   }
 
@@ -79,7 +73,6 @@ module.exports = router => {
   router.get('/dashboard/', bodyParser, bearerAuth, (req, res) => {
     let returnObject = [];
     let dashboardObject;
-    // console.log('req.user', req.user);
     return Target.find({userId: req.user._id}).lean()
       .then(entries => {
         dashboardObject = entries.map(entry => {
@@ -92,7 +85,6 @@ module.exports = router => {
       })
       .then(userEntries => {
         returnObject = dashboardObject.concat(userEntries);
-        // console.log('return object', returnObject);
         return returnObject;
       })
       .then(array => {
@@ -101,17 +93,11 @@ module.exports = router => {
         return testArray;
       })
       .then(testArray => {
-        // console.log('in priority section')
 
         let dashArray = Priority(testArray, req.user.priority);
         return dashArray;
       })
-      // .then(array => {
-      //   console.log('after count function  ', array);
-      //   return array;
-      // })
       .then(testArray => {
-        // console.log('test array before sending', testArray);
         res.status(200).json(testArray);
       })
       .catch(err => errorHandler(err, res));

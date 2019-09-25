@@ -12,8 +12,6 @@ module.exports = router => {
     .put(bearerAuth, bodyParser, (req, res) => {
     
       if (req.body.sender) {
-        // console.log('user', req.user.id);
-        // console.log('req.body.sender', req.body.sender);
         if(req.user.newmessages.includes(`${req.body.sender}`)) {
           User.findOne({_id: req.user.id})
             .then(user => {
@@ -30,11 +28,6 @@ module.exports = router => {
                 read: false,
                 deliverOn: {'$lte': Date.now()},
               }, {read: true});
-                // .then(results => {
-                //   // console.log('results of entryfind in inboxclearnotifications', results);
-                //   return;
-                // });
-                
             })
             .then(() => {
               res.sendStatus(204);
