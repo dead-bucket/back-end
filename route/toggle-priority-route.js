@@ -17,13 +17,11 @@ module.exports = router => {
           if(!user.priority.includes(req.body.priority)) {
             user.priority.push(req.body.priority);
             user.save();
-            console.log('saved user in toggle priority', user);
             return user;
 
           } else {
             user.priority = user.priority.filter(el => el !== req.body.priority);
             user.save();
-            console.log('saved user in toggle priority', user);
             return user;
           }
         } else {

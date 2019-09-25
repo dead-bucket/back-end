@@ -7,7 +7,6 @@ const Beta = require('../model/betatesterModel');
 module.exports = router => {
   router.route('/beta/:email?')
     .get(bodyParser, (req, res) => {
-      console.log('req.params' ,req.params);
       Beta.find({email: req.params.email})
         .then(results => {
           if(results.length > 0) {

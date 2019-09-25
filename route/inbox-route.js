@@ -10,7 +10,6 @@ module.exports = router => {
   router.route('/inbox/').get(bearerAuth, bodyParser, (req, res) => {
     // This will return an array with all the entries that have been
     // sent to user from the target.
-    // console.log('Sender params: ', req.query.sender);
     if (req.query.sender) {
       return (
         Entry.find({

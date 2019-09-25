@@ -26,7 +26,6 @@ module.exports = router => {
   
   async function boo(user) {
     let tempPendingRequest = [];
-    // console.log('in function boo', user)
     for(let i = 0; i < user.pendingRequest.length; i++ ) {
       let tempId = await searchForUser(`${user.pendingRequest[i]}`);
       if(tempId !== 'no user') {
@@ -45,7 +44,6 @@ module.exports = router => {
   router.route('/createnotifications/')
     
     .get(bearerAuth, bodyParser, (req, res) => {
-      // console.log('in get route createnot', req.user);
       
       if(req.user.pendingRequest.length > 0) {
         return boo(req.user)

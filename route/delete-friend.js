@@ -30,7 +30,6 @@ module.exports = router => {
         
         })
         .then(() => {
-          // console.log('user found and removed from array');
           res.sendStatus(204);
         })
         .catch(err => errorHandler(err, res));
@@ -38,7 +37,6 @@ module.exports = router => {
     } else {
       Target.findById(req.body.friend)
         .then(data => {
-          // console.log('data from delete one', data); 
           return data.remove();
           
         })

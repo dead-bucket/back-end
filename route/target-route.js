@@ -12,9 +12,7 @@ const uploadPic = require('../file_upload');
 module.exports = router => {
   router.route('/target/:id?')
     .post(bearerAuth, bodyParser, (req, res) => {
-      // console.log('in target route post!!');
       req.body.userId = req.user._id;
-      // console.log('in create new target', req.body.image);
       if (!req.body.image) {
         return new Target(req.body).save()
           .then(createdEntry => res.status(201).json(createdEntry))
@@ -37,7 +35,6 @@ module.exports = router => {
     })
   // this is working
     .get(bearerAuth, (req, res) => {
-      //console.log('request params',req.params.id);
       if(req.params.id) {
         
         return Target.findById(req.params.id)
@@ -47,8 +44,6 @@ module.exports = router => {
 
       return Target.find({userId: req.user._id})
         .then(entries => {
-          // console.log('in get all entries');
-          // let entryIds = entry.map(ent => ent._id);
 
           res.status(200).json(entries);
         })
@@ -74,7 +69,6 @@ module.exports = router => {
       }
       return Target.findById(req.params.id)
         .then(targetEntry => {
-          // console.log('deleted target entry', targetEntry);
           if(targetEntry)
             return targetEntry.remove();
           Promise.reject(new Error('objectid failed'));

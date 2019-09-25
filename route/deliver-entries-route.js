@@ -15,10 +15,8 @@ module.exports = router => {
         return errorHandler(new Error('validation failed, no recipient id specified'), res);
       }
       
-      // console.log('user info', req.user.id , req.body.recipient);deliverOn: {'$lte': Date.now()},
       Entry.updateMany({userId: req.user.id, recipient: req.body.recipient,  delivered: false}, {delivered: true})
         .then(results => {
-          // console.log('results', results.nModified);
           if(!results) return Promise.reject(new Error('Authorization error'));
           return results;        
         })
@@ -29,9 +27,7 @@ module.exports = router => {
           if(results.nModified > 0) {
             return User.find({_id: req.body.recipient})
               .then(user => {
-                // console.log('new message array', user[0].newmessages);
                 if(!user[0].newmessages.includes(`${req.user.id}`)) {
-                  // console.log('in if statement pushing new message', user);
                   user[0].newmessages.push(`${req.user.id}`);
                 }
                 return user[0].save();

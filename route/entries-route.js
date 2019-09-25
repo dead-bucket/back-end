@@ -32,11 +32,9 @@ module.exports = router => {
                 
               });
             entryToCreate.imageSize = data.fileSize;
-            console.log('image size in create entry', entryToCreate.imageSize);
             return;
           })
           .then(() => {
-            console.log('entry to save', entryToCreate);
             return entryToCreate.save();
           })
           .then(createdEntry => res.status(201).json(createdEntry))
@@ -120,9 +118,7 @@ module.exports = router => {
         .then(temp => {
           User.findById(temp.userId)
             .then(user => {
-              console.log('user storage size before', user.storageSize);
               user.storageSize = user.storageSize - temp.imageSize;
-              console.log('user storage size after', user.storageSize);
               return user.save();
             })
             .then(() => {
