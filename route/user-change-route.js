@@ -36,7 +36,7 @@ module.exports = function(router) {
                   user.firstname = req.body.firstname ? req.body.firstname : user.firstname;
                   user.lastname = req.body.lastname ? req.body.lastname : user.lastname;
                   user.email = req.body.email ? req.body.email : user.email;
-                  user.picture = data.Location;
+                  user.picture = data.data.Location;
                   user.phoneNumber = req.body.phoneNumber ? req.body.phoneNumber : user.phoneNumber;
                   user.sortby = req.body.sortby ? req.body.sortby : user.sortby;
                     
