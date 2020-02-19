@@ -6,6 +6,9 @@
   "directories": {
     "lib": "lib"
   },
+  "engines": {
+    "node": "8.12.0"
+  },
   "scripts": {
     "test": "jest -i",
     "dev": "nodemon",
